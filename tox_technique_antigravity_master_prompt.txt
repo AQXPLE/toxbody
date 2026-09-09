@@ -1,0 +1,1059 @@
+THE TOX TECHNIQUE — INFLUENCER OUTREACH & DATABASE PLATFORM
+MASTER BUILD SPECIFICATION FOR ANTIGRAVITY
+
+ROLE
+You are the lead product engineer, UI/UX designer, database architect, and QA engineer. Build a production-quality internal web application for The Tox Technique, a marketing agency whose staff perform influencer outreach from multiple Instagram accounts.
+
+This is an internal operational system, not a generic CRM template. Do not build a pretty dashboard around a weak data model. The application must make it easy to submit outreach, search the influencer database, detect repeat outreach, manage accounts/staff, and eventually scale to thousands or tens of thousands of records.
+
+TECH STACK
+- Next.js (App Router)
+- JavaScript/JSX, NOT TypeScript/TSX
+- Supabase for PostgreSQL database, authentication, and Row Level Security
+- Vercel for deployment
+- Tailwind CSS is acceptable/preferred for styling
+- Use a mature component/UI system if useful, but customize it so it does not look like an off-the-shelf admin template.
+- Use server-side operations where appropriate and keep secrets out of client code.
+- Architecture should be clean enough to extend later.
+
+DESIGN DIRECTION
+The UI should feel like an $8,000 professionally designed SaaS/internal operations product.
+
+Avoid:
+- Generic AI-generated dashboard aesthetics
+- Excessive gradients
+- Huge cards everywhere
+- Cartoonish icons
+- Unnecessary animations
+- Clutter
+- Tables with poor spacing
+- Purple/blue "AI startup" styling by default
+
+Aim for:
+- Clean, restrained, premium interface
+- Excellent typography
+- Strong spacing hierarchy
+- Crisp tables
+- Subtle borders
+- Excellent empty/loading/error states
+- Responsive desktop-first design
+- Fast navigation
+- Dark/light treatment only if it genuinely improves usability
+- Professional admin software comparable in polish to high-end SaaS products
+
+The product should feel operational and trustworthy. Data density is useful, but information must remain easy to scan.
+
+WORKING NAME
+"Tox Outreach" or "The Tox Technique Outreach"
+
+CORE BUSINESS MODEL
+
+There are approximately:
+- 15 employees/staff members
+- ~70 Instagram marketing accounts
+- Each employee has access to approximately 10 accounts
+- Multiple employees can have access to the same account
+- Employees submit approximately 30–40 influencer handles per day
+- Existing historical database contains roughly 4,000 influencers
+- The existing data is messy and not normalized
+- The same influencer can legitimately appear under multiple geographically related accounts
+- Example: Dallas-area accounts such as Southlake, McKinney, etc. may target the same influencer
+- This is NOT considered an error
+- The important duplicate/repeat to track is repeated outreach to the same influencer from the same account
+- Dates are NOT currently available/planned for the historical dataset. Build date fields into the schema now, but do not require dates for legacy imported data.
+- Future submissions should support dates automatically.
+
+CRITICAL DATA PRINCIPLE
+
+Do NOT treat "influencer" and "outreach" as the same thing.
+
+An influencer is a unique person/account in the master database.
+
+An outreach is an event/record connecting:
+Employee → Marketing Account → Influencer → Date/Time → status/metadata.
+
+Example:
+
+Influencer:
+@jessicajane
+
+Outreach #1:
+Daniyal → Alamo → @jessicajane → Sept 1
+
+Outreach #2:
+Ahmed → McKinney → @jessicajane → Sept 3
+
+Outreach #3:
+Daniyal → Alamo → @jessicajane → Oct 8 → REPEAT
+
+The influencer remains ONE database record.
+
+The three outreach records remain THREE historical records.
+
+DUPLICATE/REPEAT LOGIC
+
+This distinction is essential.
+
+Case A:
+@jessica contacted from Alamo.
+Later @jessica contacted from McKinney.
+
+Result:
+- Same influencer
+- Different account
+- Legitimate outreach
+- Do NOT classify as a same-account repeat
+- Show the cross-account history
+
+Case B:
+@jessica contacted from Alamo.
+Later @jessica contacted from Alamo again.
+
+Result:
+- Same influencer
+- Same account
+- Create a new outreach record
+- Flag it as REPEAT
+- Preserve both records
+- Show the dates when dates exist
+- Show repeat count
+
+Do not silently block repeat outreach. Flag it.
+
+The system should eventually be able to display:
+
+@jessica
+Total outreach: 4
+Accounts contacted: 3
+Alamo: 2 outreaches — 1 repeat
+McKinney: 1
+Southlake: 1
+Last outreach: [date]
+First outreach: [date]
+
+If no historical date exists, show "Historical / date unavailable" rather than inventing a date.
+
+EMPLOYEES
+
+Create an employee/staff system.
+
+Each employee should have:
+- ID
+- Name
+- Email
+- Role
+- Active/inactive
+- Created date
+- Optional avatar
+- Assigned accounts
+
+Roles:
+1. Admin
+2. Manager
+3. Staff
+
+Permissions should be configurable through Supabase RLS and application-level authorization.
+
+Staff:
+- Can access accounts assigned to them
+- Can submit outreach
+- Can search influencer data according to permitted visibility
+- Can view relevant outreach history
+- Should not be able to modify system configuration
+
+Manager:
+- Can see team-level data
+- Can manage staff/account assignments as permitted
+- Can review outreach
+- Can access analytics
+- Can add/edit database records
+- Can manage account/location data
+
+Admin:
+- Full access
+- Manage users
+- Manage accounts
+- Manage locations
+- Manage database
+- Import/export
+- Configuration
+- Audit/log access
+- Full analytics
+
+MARKETING ACCOUNTS
+
+Each Instagram marketing account is a unique database entity.
+
+Fields:
+- id
+- account_name/internal name
+- instagram_handle
+- display_name
+- location_id
+- active
+- notes
+- created_at
+- updated_at
+
+Example:
+Internal name: Alamo
+Instagram handle: thetoxalamo
+Location: Alamo / relevant Texas location
+
+IMPORTANT:
+Do not assume account name = location.
+An account has a location relationship.
+
+ACCOUNT ASSIGNMENTS
+
+Create a many-to-many relationship:
+
+employees ↔ marketing_accounts
+
+An employee can have multiple accounts.
+An account can have multiple employees.
+
+Example:
+Daniyal → Alamo
+Ahmed → Alamo
+Sarah → Alamo
+
+Do NOT duplicate the Alamo account three times.
+
+LOCATIONS
+
+Create a dedicated locations table.
+
+Potential fields:
+- id
+- name
+- city
+- state
+- country
+- latitude/longitude (optional future capability)
+- active
+- notes
+
+An account belongs to a location.
+
+An influencer may have:
+- primary location
+- city
+- state
+- potentially multiple location tags in the future
+
+Design the schema so multiple locations can eventually be associated with an influencer if needed.
+
+INFLUENCERS
+
+Create a normalized influencers table.
+
+Suggested fields:
+- id
+- instagram_handle
+- normalized_handle
+- instagram_url
+- display_name
+- profile_image_url
+- bio
+- city
+- state
+- country
+- location_id or location relationships
+- follower_count
+- following_count
+- post_count
+- niche/category
+- gender (nullable, only if supplied)
+- verified
+- profile_status
+- is_active
+- notes
+- source
+- last_verified_at
+- created_at
+- updated_at
+
+Do not require all enrichment fields on initial submission.
+
+The only essential submission field should be the Instagram handle, plus account and employee context.
+
+HANDLE NORMALIZATION
+
+Normalize Instagram handles before matching.
+
+These should resolve to the same canonical handle:
+@JaneSmith
+janesmith
+JANEsmith
+https://instagram.com/janesmith
+https://www.instagram.com/janesmith/
+
+Store a canonical normalized form such as:
+janesmith
+
+Display the user's preferred formatting such as:
+@janesmith
+
+Strip whitespace, @, URLs, query parameters, trailing slashes, etc.
+
+Exact normalized handle matching should be the first duplicate detection mechanism.
+
+Do not merge people based solely on display name.
+
+OUTREACH RECORDS
+
+Create a separate outreach table.
+
+Suggested fields:
+- id
+- influencer_id
+- account_id
+- employee_id
+- submitted_at
+- outreach_date (nullable for legacy)
+- is_repeat_same_account
+- previous_outreach_id (nullable)
+- repeat_count_for_account
+- status
+- notes
+- source/import_batch_id
+- created_at
+
+Potential statuses:
+- Submitted
+- Contacted
+- Follow-up
+- Replied
+- Interested
+- Not Interested
+- No Response
+- Closed
+- Other
+
+Do not overcomplicate v1 if statuses aren't currently used. Make the schema extensible.
+
+REPEAT CALCULATION
+
+When a new outreach is submitted:
+
+1. Normalize handle.
+2. Find/create influencer.
+3. Identify account.
+4. Look for prior outreach records for the same influencer + same account.
+5. If none:
+   is_repeat_same_account = false
+   repeat_count_for_account = 0
+6. If one or more:
+   is_repeat_same_account = true
+   repeat_count_for_account = number of previous same-account outreach records
+   previous_outreach_id = most recent prior same-account outreach
+7. Never delete or overwrite the previous outreach.
+
+Cross-account previous outreach should be visible but should not trigger the same-account repeat flag.
+
+SUBMISSION WORKFLOW
+
+Staff should have a fast "Log Outreach" workflow.
+
+The common use case is:
+
+Employee selects:
+Account: Alamo
+
+Then enters:
+@handle1
+@handle2
+@handle3
+@handle4
+@handle5
+
+Allow bulk paste of handles, one per line, and ideally comma-separated input as well.
+
+On submission:
+- Normalize handles
+- Validate them
+- Match against influencer database
+- Create missing influencer records
+- Create outreach records
+- Detect same-account repeats
+- Show a clear preview BEFORE final submission
+
+Example preview:
+
+5 handles detected
+
+✓ 3 new influencers
+↻ 2 repeat outreach records
+
+@person1 — New
+@person2 — New
+@person3 — Repeat: previously contacted from Alamo
+@person4 — New
+@person5 — Repeat: previously contacted from Alamo
+
+Allow the employee to confirm.
+
+Do not make staff enter redundant information repeatedly.
+
+If an employee only has access to 10 accounts, the account selector should show only their permitted accounts.
+
+MANAGERS/ADMINS should be able to submit for any account when appropriate.
+
+DASHBOARD
+
+Build a professional operational dashboard.
+
+Possible top metrics:
+- Outreach today
+- Outreach this week
+- Outreach this month
+- Unique influencers reached
+- Repeat outreach
+- Active employees
+- Active accounts
+- Total influencers
+- Unverified/needs review
+
+Charts:
+- Outreach volume over time
+- Outreach by employee
+- Outreach by account
+- New vs repeat
+- Geographic distribution
+- Optional status/reply metrics later
+
+Do not overload the dashboard.
+
+EMPLOYEE PERFORMANCE
+
+Managers should have a staff analytics page.
+
+For each employee:
+- Total outreach
+- Outreach today
+- Outreach this week
+- Outreach this month
+- Unique influencers
+- Repeat outreach
+- Accounts used
+- Average outreach per active day
+- Trend over time
+
+Allow filtering by:
+- Date
+- Employee
+- Account
+- Location
+- New/repeat
+
+ACCOUNT PERFORMANCE
+
+For each marketing account:
+- Total outreach
+- Unique influencers
+- Repeat outreach
+- Number of employees using account
+- Most recent outreach
+- Location
+- Assigned staff
+
+Allow opening an account to see its outreach history.
+
+INFLUENCER SEARCH
+
+This is one of the most important features.
+
+Create a fast global search.
+
+Search by:
+- Instagram handle
+- Display name
+- City
+- State
+- Location
+- Account
+- Employee
+- status
+- niche/category
+
+Search results should be table-based and useful.
+
+Example columns:
+- Influencer
+- Location
+- Followers
+- Outreach count
+- Accounts contacted
+- Last outreach
+- Repeat count
+- Verification status
+
+Clicking an influencer opens a detailed profile drawer/page.
+
+INFLUENCER DETAIL PAGE
+
+Show:
+- @handle
+- Display name
+- Profile link
+- profile verification status
+- location
+- followers
+- niche
+- notes
+- total outreach
+- unique accounts contacted
+- repeat count
+
+Then a chronological outreach history:
+
+Date | Employee | Account | Status | Repeat?
+
+If dates don't exist:
+Historical records should clearly display "Date unavailable" or "Historical import."
+
+ACCOUNT-BASED SEARCH / MASS REACHOUT
+
+This is a major business feature.
+
+Example:
+A new account called "Sugarland" is created.
+
+Manager selects:
+Account: Sugarland
+Location: Sugar Land, Texas
+
+Then opens:
+Influencers → Browse by Location
+
+The system should be able to show hundreds of influencers matching that location.
+
+Useful filters:
+- Account
+- Location
+- City
+- State
+- Never contacted by this account
+- Contacted by this account
+- Contacted by another account
+- Repeat count
+- Last contacted
+- Followers
+- Niche
+- Verification
+- Active status
+
+Example result:
+
+347 influencers found
+
+281 never contacted by Sugarland
+44 contacted through other accounts
+22 previously contacted through Sugarland
+
+This is NOT merely a search database. It should become a prospecting tool.
+
+Eventually allow:
+- Select multiple influencers
+- Create a campaign/list
+- Export selected handles
+- Copy handles
+- Assign selected prospects
+- Mark as ready for outreach
+
+Do not build actual automated Instagram messaging unless explicitly requested later. This system is for tracking/prospecting.
+
+META / INSTAGRAM VERIFICATION
+
+Build the architecture for external profile verification.
+
+When a user searches:
+@jessicajane
+
+The system should show:
+- Whether that handle exists in the internal database
+- Whether it has prior outreach
+- Outreach history
+- Internal canonical handle
+- Instagram profile link
+
+For external verification, use official Meta/Instagram APIs wherever the requested data and permissions are available.
+
+Do NOT implement fragile scraping as the default.
+
+The system should gracefully handle:
+- API unavailable
+- API permission restrictions
+- private profile
+- deleted account
+- changed username
+- rate limits
+
+If Meta cannot verify a profile, say:
+"External verification unavailable"
+rather than pretending the profile does/doesn't exist.
+
+Keep the integration modular so it can be upgraded later.
+
+IMPORTING THE EXISTING DATA
+
+A sample historical TSV file is provided with this specification.
+
+Filename:
+influencer track - Sheet1.tsv
+
+The sample represents the messy structure of the existing database.
+
+The existing data has account/location names as column headers and influencer handles beneath them, but some account/location values also appear inside cells.
+
+DO NOT assume every non-handle cell is an influencer.
+
+The import system should be designed as a migration/normalization process.
+
+Requirements:
+- Preserve raw imported data
+- Detect Instagram handles
+- Normalize handles
+- Identify account/location context where possible
+- Avoid creating duplicate influencer records
+- Preserve each historical occurrence as an outreach/history record where the account context can be established
+- Mark legacy records as historical/imported
+- Dates can be NULL / unavailable
+- Do not invent dates
+- Do not silently discard ambiguous rows
+- Provide an import review screen for ambiguous records
+
+Because the provided sample is incomplete, build an import tool that allows a manager/admin to upload CSV/TSV/XLSX later and map columns manually.
+
+IMPORT REVIEW UI
+
+Before committing an import, show:
+- Total rows
+- Recognized handles
+- New influencers
+- Existing influencers
+- Possible duplicates
+- Ambiguous rows
+- Invalid rows
+- Account matches
+- Location matches
+
+Allow admins to review ambiguous rows.
+
+DATABASE INDEXING / PERFORMANCE
+
+Use PostgreSQL indexes on:
+- normalized_handle
+- account_id
+- employee_id
+- influencer_id
+- location_id
+- outreach_date
+- submitted_at
+- is_repeat_same_account
+
+Use efficient pagination.
+
+Never load thousands of rows into the browser unnecessarily.
+
+Use server-side filtering/search where appropriate.
+
+SUPABASE
+
+Use Supabase Auth for authentication.
+
+Use PostgreSQL relational tables.
+
+Use Row Level Security.
+
+Do not rely solely on hidden UI controls for security.
+
+Suggested tables:
+
+profiles
+employees
+locations
+marketing_accounts
+employee_account_assignments
+influencers
+influencer_locations
+outreach_records
+import_batches
+import_rows
+audit_logs
+
+You may simplify/adjust the schema if there is a better relational design, but preserve the business relationships described above.
+
+AUDIT LOG
+
+Create an audit system for important administrative changes.
+
+Track:
+- user
+- action
+- entity
+- entity_id
+- timestamp
+- relevant metadata
+
+Useful for:
+- account changes
+- employee changes
+- influencer edits
+- imports
+- deletions
+- role changes
+
+Prefer soft deletion/archive for important entities instead of destructive deletion.
+
+NAVIGATION
+
+Suggested sidebar:
+
+Dashboard
+Outreach
+Influencers
+Accounts
+Locations
+Team
+Analytics
+Imports
+Settings
+
+Staff should see only what they are allowed to see.
+
+Managers see more.
+Admins see everything.
+
+OUTREACH PAGE
+
+Make this the fastest operational page.
+
+Possible layout:
+- Header
+- Account selector
+- Bulk handle input
+- Preview/validation
+- Submit
+- Recent submissions
+
+Also include:
+"Today's outreach"
+with filters.
+
+SEARCH EXPERIENCE
+
+Global search should be accessible quickly.
+
+Typing:
+jessica
+
+should find:
+@jessica...
+display names
+possibly locations
+
+Typing:
+jessicajane
+
+should immediately surface the exact normalized handle if present.
+
+Use debounced search.
+
+Do not require pressing Search for every character if a modern autocomplete experience can be implemented reliably.
+
+FILTER UX
+
+Filters should be:
+- Fast
+- Clear
+- Removable
+- Persisted where useful
+
+Use filter chips.
+
+For example:
+Location: Dallas
+Account: Southlake
+Contacted: Never
+Followers: 10K–100K
+
+Result count should update.
+
+BULK OPERATIONS
+
+Where useful:
+- bulk import
+- bulk export
+- bulk assign
+- bulk status changes
+- bulk add to prospect list
+
+Always show confirmation for destructive or large operations.
+
+Do not add unnecessary bulk actions just for the sake of features.
+
+DATA QUALITY
+
+Build a "Data Quality" view for managers/admins.
+
+Show:
+- handles needing review
+- malformed handles
+- duplicate candidates
+- missing locations
+- missing profile verification
+- stale profile verification
+- ambiguous imported rows
+
+This will become important as the database grows.
+
+RESPONSIVE DESIGN
+
+Desktop is the primary environment.
+
+Still make the application usable on:
+- laptop
+- tablet
+- mobile
+
+Tables should have sensible responsive behavior.
+
+Do not force a giant desktop table onto a phone.
+
+ERROR STATES
+
+Every data-heavy page should have:
+- loading state
+- empty state
+- error state
+- retry action
+
+Forms should show useful validation messages.
+
+Do not show raw database errors to normal staff users.
+
+SECURITY
+
+- Use Supabase Auth
+- Enforce RLS
+- Never expose service-role keys to browser
+- Validate all user input
+- Protect admin functions
+- Validate file uploads
+- Restrict imports to authorized roles
+- Log important admin actions
+- Avoid storing unnecessary sensitive information
+
+DO NOT BUILD:
+- automated Instagram DMs
+- fake Instagram verification
+- scraping infrastructure
+- unnecessary AI features
+- payment systems
+- public influencer marketplace
+- bloated CRM features unrelated to outreach tracking
+
+The first version should be excellent at the core workflow.
+
+FUTURE-READY FEATURES
+
+Structure the application so future versions can add:
+- outreach campaigns
+- automated follow-up reminders
+- richer Meta integration
+- influencer categories
+- influencer scoring
+- lead quality scoring
+- response tracking
+- conversion tracking
+- geographic radius search
+- employee goals/quotas
+- notifications
+- exports
+- API integrations
+- CRM integrations
+
+But do not let future features make v1 complicated.
+
+SEED / DEMO DATA
+
+Use the supplied sample file as development reference and create sensible demo records.
+
+Create:
+- several employees
+- several accounts
+- overlapping employee/account assignments
+- several locations
+- influencers appearing under multiple accounts
+- repeated same-account outreach records
+- historical records with missing dates
+
+This must demonstrate the duplicate/repeat logic visibly.
+
+IMPORTANT EXAMPLE
+
+Seed a scenario:
+
+Daniyal → Alamo → @example
+Ahmed → McKinney → @example
+Daniyal → Alamo → @example again
+
+The UI should clearly show:
+- one influencer
+- three outreach records
+- two accounts
+- one same-account repeat
+
+ADMIN PANEL
+
+Build a proper admin area.
+
+Admin pages:
+- Team management
+- Account management
+- Location management
+- Influencer management
+- Import management
+- Audit logs
+- Settings
+
+Managers should have a management area but less destructive access than admins.
+
+Do not make every user an admin.
+
+SETTINGS
+
+Include basic settings for:
+- organization name
+- default timezone
+- pagination
+- repeat warning behavior
+- profile verification settings
+- future integration settings
+
+Do not hardcode business logic that should reasonably be configurable.
+
+TIMEZONE
+
+Use a configurable organization timezone.
+
+Do not assume browser timezone is the business timezone for reporting.
+
+REPORTING
+
+All date-based analytics should use the organization's configured timezone.
+
+Because legacy records may lack dates, reporting should distinguish:
+- dated outreach
+- historical/undated outreach
+
+Do not fabricate dates.
+
+TESTING / QA
+
+Before considering the build complete, test:
+
+1. Create influencer.
+2. Submit first outreach.
+3. Submit same influencer from another account.
+4. Submit same influencer again from original account.
+5. Confirm only one influencer record exists.
+6. Confirm three outreach records exist.
+7. Confirm only the third record is same-account repeat.
+8. Confirm employee account permissions.
+9. Confirm managers can view team analytics.
+10. Confirm staff cannot access unauthorized accounts.
+11. Test bulk submission.
+12. Test normalization of @handle / URL / uppercase.
+13. Test search.
+14. Test filters.
+15. Test pagination.
+16. Test import preview.
+17. Test malformed import rows.
+18. Test empty states.
+19. Test mobile layout.
+20. Test RLS/security.
+
+QUALITY BAR
+
+Do not stop after generating the UI.
+
+The application must have:
+- real Supabase database integration
+- real authentication
+- real CRUD
+- real filtering/search
+- real relational data
+- real repeat detection
+- real role permissions
+- usable import architecture
+- production-ready error handling
+
+If a feature cannot be completed because an external API requires credentials or approval, implement the architecture and a clean disabled/configuration state rather than faking the integration.
+
+BUILD ORDER
+
+1. Establish Next.js project structure.
+2. Configure Supabase.
+3. Build database schema and migrations.
+4. Implement authentication/RLS.
+5. Implement employees/roles.
+6. Implement locations/accounts/assignments.
+7. Implement influencers.
+8. Implement outreach records and repeat detection.
+9. Build submission workflow.
+10. Build influencer search.
+11. Build account/location filtering.
+12. Build dashboards/analytics.
+13. Build admin panels.
+14. Build import pipeline/review.
+15. Add external Meta integration abstraction.
+16. Polish UI/UX.
+17. Seed demo data.
+18. Run QA and fix issues.
+19. Prepare Vercel deployment configuration.
+20. Provide setup documentation.
+
+ENVIRONMENT VARIABLES
+
+Use environment variables for:
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+Any future server-side Meta credentials must use server-only environment variables and must never be exposed client-side.
+
+DELIVERABLE
+
+Build the complete application, not merely a mockup.
+
+At the end, provide:
+- what was built
+- database schema summary
+- Supabase setup/migration instructions
+- required environment variables
+- how to create the first admin
+- how to import the historical data
+- how to deploy to Vercel
+- known limitations
+- recommended next steps
+
+IMPORTANT PRODUCT PHILOSOPHY
+
+The most important thing is the data model.
+
+The UI can be changed later.
+The database should not need to be rebuilt because the initial implementation confused influencers with outreach.
+
+One influencer = one canonical influencer record.
+
+Every outreach = a separate historical event.
+
+Same influencer across different accounts = legitimate cross-account activity.
+
+Same influencer + same account = repeat outreach and must be flagged.
+
+The application should make that distinction obvious to both humans and the underlying database.
+
+Use the supplied "influencer track - Sheet1.tsv" as a real-world messy-data reference while building the migration/import workflow.
