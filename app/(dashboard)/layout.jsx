@@ -20,20 +20,19 @@ export default function DashboardLayout({ children }) {
   const handleUserChange = (newUserId) => {
     const updated = db.setCurrentUser(newUserId);
     setCurrentUser(updated);
-    // Reload page state to trigger RBAC recalculation across views
     window.location.reload();
   };
 
   if (!mounted) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-[#0b0c0e] text-zinc-400 font-mono text-xs">
+      <div className="flex h-screen w-screen items-center justify-center bg-[#f8fafc] text-zinc-500 font-mono text-xs">
         Loading The Tox Technique Outreach Platform...
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#0d0e12]">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#f8fafc]">
       {/* Navigation Sidebar */}
       <Sidebar currentUser={currentUser} onUserChange={handleUserChange} />
 

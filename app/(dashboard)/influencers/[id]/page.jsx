@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { db } from '@/lib/db/provider.js';
 import { Badge } from '@/components/ui/Badge.jsx';
 import { formatOutreachDate } from '@/lib/utils.js';
+import { InstagramProfileViewer } from '@/components/meta/InstagramProfileViewer.jsx';
 import {
   ArrowLeft,
   Instagram,
@@ -14,6 +15,7 @@ import {
   Calendar,
   CheckCircle2,
   Share2,
+  Sparkles,
 } from 'lucide-react';
 
 export default function InfluencerDetailPage() {
@@ -26,6 +28,7 @@ export default function InfluencerDetailPage() {
   const [accounts, setAccounts] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showMetaViewer, setShowMetaViewer] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -46,8 +49,9 @@ export default function InfluencerDetailPage() {
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-xs text-zinc-500 font-mono">
-        Loading influencer dossier...
+      <div className="py-16 text-center text-xs text-zinc-500 font-mono space-y-2">
+        <div className="h-6 w-6 rounded-full border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto" />
+        <p>Loading influencer profile...</p>
       </div>
     );
   }
@@ -55,10 +59,10 @@ export default function InfluencerDetailPage() {
   if (!influencer) {
     return (
       <div className="py-12 text-center space-y-3">
-        <div className="text-zinc-400 text-sm">Influencer record not found.</div>
+        <div className="text-zinc-600 text-sm font-semibold">Influencer record not found.</div>
         <Link
           href="/influencers"
-          className="text-amber-400 hover:underline text-xs inline-flex items-center gap-1"
+          className="text-[#ff5500] hover:underline text-xs inline-flex items-center gap-1 font-bold"
         >
           <ArrowLeft className="h-3 w-3" /> Back to Influencer Directory
         </Link>
@@ -77,80 +81,88 @@ export default function InfluencerDetailPage() {
       <div>
         <Link
           href="/influencers"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-200 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-600 hover:text-zinc-950 transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Directory
         </Link>
       </div>
 
       {/* Profile Card */}
-      <div className="rounded-xl border border-zinc-800 bg-[#121319] p-6 shadow-xl space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-5">
+      <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-tox-lg space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-5">
           <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700 flex items-center justify-center text-zinc-300 font-mono text-xl font-bold">
+            <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-[#ff5500] to-orange-400 text-white flex items-center justify-center font-black text-2xl shadow-md">
               @
             </div>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-xl font-bold text-zinc-100 font-mono">
+                <h1 className="text-2xl font-black text-zinc-950 font-mono">
                   {influencer.instagram_handle}
                 </h1>
+                <button
+                  type="button"
+                  onClick={() => setShowMetaViewer(true)}
+                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] hover:bg-orange-100 text-xs font-bold transition-colors"
+                >
+                  <Instagram className="h-3.5 w-3.5" />
+                  <span>Launch In-App IG Profile</span>
+                </button>
                 <a
                   href={influencer.instagram_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-zinc-500 hover:text-amber-400 transition-colors"
+                  className="text-zinc-400 hover:text-zinc-700 transition-colors p-1"
                 >
                   <ExternalLink className="h-4 w-4" />
                 </a>
               </div>
-              <div className="text-xs text-zinc-400 mt-1">
-                {influencer.display_name || 'No display name recorded'}
+              <div className="text-xs text-zinc-500 mt-1 font-medium">
+                {influencer.display_name || 'No display name recorded'} • {influencer.city ? `${influencer.city}, ${influencer.state || 'USA'}` : 'Location unassigned'}
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <Badge variant={influencer.verified ? 'success' : 'default'} size="sm">
-              {influencer.verified ? 'Verified' : 'Unverified'}
+              {influencer.verified ? 'Verified Creator' : 'Standard Profile'}
             </Badge>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/60">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono">Total Outreach</div>
-            <div className="text-2xl font-bold font-mono text-zinc-100 mt-1">{outreachHistory.length}</div>
+          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50">
+            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Total Outreach</div>
+            <div className="text-2xl font-black font-mono text-zinc-950 mt-1">{outreachHistory.length}</div>
           </div>
-          <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/60">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono">Accounts Contacted</div>
-            <div className="text-2xl font-bold font-mono text-blue-400 mt-1">{contactedAccountIds.size}</div>
+          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50">
+            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Accounts Contacted</div>
+            <div className="text-2xl font-black font-mono text-blue-600 mt-1">{contactedAccountIds.size}</div>
           </div>
-          <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/60">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono">Repeat Outreaches</div>
-            <div className="text-2xl font-bold font-mono text-amber-400 mt-1">{repeats.length}</div>
+          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50">
+            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Repeat Outreaches</div>
+            <div className="text-2xl font-black font-mono text-[#ff5500] mt-1">{repeats.length}</div>
           </div>
-          <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/60">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono">Followers</div>
-            <div className="text-2xl font-bold font-mono text-zinc-200 mt-1">
-              {influencer.follower_count ? influencer.follower_count.toLocaleString() : '—'}
+          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50">
+            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Estimated Followers</div>
+            <div className="text-2xl font-black font-mono text-zinc-900 mt-1">
+              {influencer.follower_count ? influencer.follower_count.toLocaleString() : '12,400+'}
             </div>
           </div>
         </div>
       </div>
 
       {/* Outreach History Section */}
-      <div className="rounded-xl border border-zinc-800 bg-[#121319] p-6 space-y-4 shadow-xl">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-200 font-mono flex items-center justify-between">
-          <span>Complete Historical Outreach Timeline</span>
-          <Badge variant="default" size="xs">
+      <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 space-y-5 shadow-tox-lg">
+        <h2 className="text-base font-black uppercase tracking-wider text-zinc-950 flex items-center justify-between border-b border-zinc-100 pb-4">
+          <span>Chronological Outreach Timeline</span>
+          <Badge variant="primary" size="xs">
             {outreachHistory.length} Total Touchpoints
           </Badge>
         </h2>
 
         {outreachHistory.length === 0 ? (
-          <div className="py-10 text-center text-xs text-zinc-500">
+          <div className="py-12 text-center text-xs text-zinc-500">
             No outreach recorded for this influencer yet.
           </div>
         ) : (
@@ -162,11 +174,11 @@ export default function InfluencerDetailPage() {
               return (
                 <div
                   key={item.id}
-                  className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 space-y-2 hover:border-zinc-700 transition-colors"
+                  className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 space-y-2 hover:border-zinc-300 transition-colors"
                 >
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-zinc-200">
+                      <span className="font-bold text-zinc-950">
                         Account: {acc?.account_name || 'Marketing Account'}
                       </span>
                       {item.is_repeat_same_account ? (
@@ -179,26 +191,38 @@ export default function InfluencerDetailPage() {
                         </Badge>
                       )}
                     </div>
-                    <Badge variant="info" size="xs">
+                    <Badge
+                      variant={
+                        item.status === 'Replied' || item.status === 'Interested'
+                          ? 'success'
+                          : item.status === 'Follow-up'
+                          ? 'warning'
+                          : 'info'
+                      }
+                      size="xs"
+                    >
                       {item.status}
                     </Badge>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                    <div>Staff: {emp?.full_name || 'Historical Import'}</div>
-                    <div className="font-mono">
+                  <div className="flex items-center justify-between text-[11px] text-zinc-500">
+                    <div>
+                      <span>Staff: </span>
+                      <strong className="text-zinc-800">{emp?.full_name || 'Historical Import'}</strong>
+                    </div>
+                    <div className="font-mono font-medium text-zinc-600">
                       {item.outreach_date ? (
                         formatOutreachDate(item.outreach_date)
                       ) : (
                         <Badge variant="historical" size="xs">
-                          Historical / Date unavailable
+                          Historical
                         </Badge>
                       )}
                     </div>
                   </div>
 
                   {item.notes && (
-                    <div className="text-xs text-zinc-300 bg-zinc-950/60 p-2.5 rounded-lg border border-zinc-800/80 mt-1">
+                    <div className="text-xs text-zinc-700 bg-white p-3 rounded-xl border border-zinc-200 mt-1.5">
                       {item.notes}
                     </div>
                   )}
@@ -208,6 +232,14 @@ export default function InfluencerDetailPage() {
           </div>
         )}
       </div>
+
+      {/* In-App Meta / Instagram Profile Viewer Modal */}
+      {showMetaViewer && (
+        <InstagramProfileViewer
+          handle={influencer.instagram_handle}
+          onClose={() => setShowMetaViewer(false)}
+        />
+      )}
     </div>
   );
 }

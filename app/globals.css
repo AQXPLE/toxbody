@@ -3,48 +3,65 @@
 @tailwind utilities;
 
 :root {
-  --background: #0b0c0e;
-  --foreground: #f4f4f5;
-  --card: #131418;
-  --card-border: #23242a;
-  --muted: #71717a;
-  --accent-gold: #c5a880;
+  --background: #f8fafc;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-border: #e4e4e7;
+  --muted: #64748b;
+  --orange: #ff5500;
+  --orange-light: #fff5ed;
 }
 
 @layer base {
   body {
-    background-color: #0d0e12;
-    color: #e4e4e7;
+    background-color: #f8fafc;
+    color: #09090b;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Crisp custom scrollbar for dense tables */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #111215;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #cbd5e1;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #94a3b8;
 }
 
-/* High density table styles */
+/* Crisp table styling */
 .dense-table th {
   letter-spacing: 0.05em;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  color: #a1a1aa;
+  color: #64748b;
+  background-color: #f8fafc;
 }
 
 .dense-table td {
   font-size: 0.8125rem;
+}
+
+/* Subtle orange glow animation */
+@keyframes orangePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 85, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 85, 0, 0);
+  }
+}
+
+.pulse-orange {
+  animation: orangePulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }

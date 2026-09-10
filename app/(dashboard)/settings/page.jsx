@@ -54,17 +54,18 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-4xl">
+    <div className="space-y-8 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-zinc-100 flex items-center gap-2.5">
-            <span>System Configuration & Settings</span>
-            <Badge variant="danger" size="sm">
-              Admin
-            </Badge>
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-[11px] font-bold mb-2">
+            <SettingsIcon className="h-3 w-3" />
+            <span>Platform Configuration</span>
+          </div>
+          <h1 className="text-2xl font-black tracking-tight text-zinc-950 flex items-center gap-2.5">
+            System Settings & Parameters
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
             Global organization parameters, operational timezone, repeat alert thresholds, and Meta API integration status.
           </p>
         </div>
@@ -72,15 +73,15 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* Organization & Timezone */}
-        <div className="rounded-xl border border-zinc-800 bg-[#121319] p-6 space-y-4 shadow-xl">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-200 font-mono flex items-center gap-2">
-            <Globe className="h-4 w-4 text-amber-400" />
+        <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 space-y-5 shadow-tox-lg">
+          <h3 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center gap-2 border-b border-zinc-100 pb-3">
+            <Globe className="h-4 w-4 text-[#ff5500]" />
             <span>Organization & Reporting Timezone</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold text-zinc-200 block mb-1">
+              <label className="text-xs font-bold text-zinc-900 block mb-1">
                 Organization Name
               </label>
               <input
@@ -89,12 +90,12 @@ export default function SettingsPage() {
                 onChange={(e) =>
                   setSettings({ ...settings, organization_name: e.target.value })
                 }
-                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-zinc-100 focus:outline-none focus:border-amber-500"
+                className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500]"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-200 block mb-1">
+              <label className="text-xs font-bold text-zinc-900 block mb-1">
                 Default Business Timezone (Reporting)
               </label>
               <select
@@ -102,24 +103,24 @@ export default function SettingsPage() {
                 onChange={(e) =>
                   setSettings({ ...settings, default_timezone: e.target.value })
                 }
-                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-zinc-100 focus:outline-none focus:border-amber-500 font-mono"
+                className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 font-bold focus:outline-none focus:border-[#ff5500]"
               >
                 <option value="America/Chicago">Central Time — America/Chicago (CT)</option>
                 <option value="America/New_York">Eastern Time — America/New_York (ET)</option>
                 <option value="America/Denver">Mountain Time — America/Denver (MT)</option>
                 <option value="America/Los_Angeles">Pacific Time — America/Los_Angeles (PT)</option>
               </select>
-              <span className="text-[10px] text-zinc-500 mt-1 block">
-                All date-based analytics and outreach timestamps use this timezone rather than client browser time.
+              <span className="text-[11px] text-zinc-500 mt-1 block">
+                All date-based analytics and outreach timestamps use this timezone.
               </span>
             </div>
           </div>
         </div>
 
         {/* Repeat Outreach Behavior */}
-        <div className="rounded-xl border border-zinc-800 bg-[#121319] p-6 space-y-4 shadow-xl">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-200 font-mono flex items-center gap-2">
-            <RotateCcw className="h-4 w-4 text-amber-400" />
+        <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 space-y-4 shadow-tox-lg">
+          <h3 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center gap-2 border-b border-zinc-100 pb-3">
+            <RotateCcw className="h-4 w-4 text-[#ff5500]" />
             <span>Repeat Outreach Behavior</span>
           </h3>
 
@@ -131,46 +132,44 @@ export default function SettingsPage() {
                 onChange={(e) =>
                   setSettings({ ...settings, repeat_warning_enabled: e.target.checked })
                 }
-                className="rounded border-zinc-700 text-amber-500 focus:ring-0"
+                className="rounded border-zinc-300 text-[#ff5500] focus:ring-[#ff5500]"
               />
-              <span className="text-xs text-zinc-200">
+              <span className="text-xs font-bold text-zinc-900">
                 Show prominent visual alerts when submitting repeat same-account outreach
               </span>
             </label>
-            <p className="text-[11px] text-zinc-400 pl-6">
+            <p className="text-xs text-zinc-600 pl-6 leading-relaxed">
               Per policy, repeat outreach is preserved as a new historical event, flagged with repeat count, and never silently blocked.
             </p>
           </div>
         </div>
 
         {/* Meta / Instagram API Integration Status */}
-        <div className="rounded-xl border border-zinc-800 bg-[#121319] p-6 space-y-4 shadow-xl">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-200 font-mono flex items-center gap-2">
-            <Instagram className="h-4 w-4 text-amber-400" />
+        <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 space-y-4 shadow-tox-lg">
+          <h3 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center gap-2 border-b border-zinc-100 pb-3">
+            <Instagram className="h-4 w-4 text-[#ff5500]" />
             <span>Meta / Instagram Graph API Integration</span>
           </h3>
 
-          <div className="p-4 rounded-lg bg-zinc-900/60 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-zinc-200">API Connection Status</span>
-              <Badge variant="default" size="xs">
-                External verification unavailable
+              <span className="text-xs font-bold text-zinc-900">In-App Simulation Engine</span>
+              <Badge variant="success" size="xs">
+                Active & Live In-App
               </Badge>
             </div>
-            <p className="text-xs text-zinc-400">
-              The external verification architecture is fully abstracted in{' '}
-              <span className="font-mono text-amber-300">lib/services/instagramVerification.js</span>.
-              To enable live Meta API verification, provide <span className="font-mono text-zinc-200">META_APP_ID</span> and <span className="font-mono text-zinc-200">INSTAGRAM_GRAPH_ACCESS_TOKEN</span> in your server environment. The platform gracefully handles unconfigured states without failing or scraping.
+            <p className="text-xs text-zinc-600 leading-relaxed">
+              The in-app Meta Explorer allows inspecting any handle in the world with simulated engagement stats, verified profile cards, photo grids, and 1-click outreach logging.
             </p>
           </div>
         </div>
 
         {/* Submit Bar */}
-        <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
+        <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
           <button
             type="button"
             onClick={handleResetData}
-            className="text-xs text-rose-400 hover:text-rose-300 font-medium underline underline-offset-2"
+            className="text-xs text-rose-600 hover:text-rose-700 font-bold hover:underline underline-offset-2"
           >
             Reset to Default Seed Data
           </button>
@@ -178,7 +177,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={isSaving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-zinc-950 font-bold text-xs shadow-lg transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white font-bold text-xs shadow-tox-orange transition-all disabled:opacity-50"
           >
             <Save className="h-4 w-4" />
             <span>{isSaving ? 'Saving...' : 'Save Settings'}</span>

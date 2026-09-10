@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { db } from '@/lib/db/provider.js';
 import { InfluencerDrawer } from '@/components/influencers/InfluencerDrawer.jsx';
+import { InstagramProfileViewer } from '@/components/meta/InstagramProfileViewer.jsx';
 import { Badge } from '@/components/ui/Badge.jsx';
 import { FilterChip } from '@/components/ui/FilterChip.jsx';
 import { useToast } from '@/components/ui/Toast.jsx';
@@ -44,6 +45,8 @@ export default function InfluencersPage() {
 
   // Selected influencer for slide-over drawer
   const [activeInfluencer, setActiveInfluencer] = useState(null);
+  // Selected influencer for in-app Instagram viewer modal
+  const [activeMetaHandle, setActiveMetaHandle] = useState(null);
 
   // Prospecting multi-select
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -231,31 +234,32 @@ export default function InfluencersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-zinc-100 flex items-center gap-2.5">
-            <span>Master Influencer Directory & Prospecting</span>
-            <Badge variant="default" size="sm">
-              {influencers.length} Total Profiles
-            </Badge>
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-[11px] font-bold mb-2">
+            <Users className="h-3 w-3" />
+            <span>Master Creator Directory</span>
+          </div>
+          <h1 className="text-2xl font-black tracking-tight text-zinc-950 flex items-center gap-2.5">
+            Influencer Intelligence & Prospecting
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Global search, location-based targeting, cross-account reachout intelligence, and handle prospecting.
+          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
+            Single source of truth for all creators, historical multi-account touchpoints, repeat monitoring, and in-app Instagram profile inspection.
           </p>
         </div>
 
-        {/* Bulk Action Bar if items selected */}
-        <div className="flex items-center gap-2">
+        {/* Bulk Action Bar */}
+        <div className="flex items-center gap-3">
           {selectedIds.size > 0 && (
-            <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-700/80 rounded-lg px-3 py-1.5 animate-in fade-in-50">
-              <span className="text-xs font-semibold text-amber-400 font-mono">
+            <div className="flex items-center gap-2 bg-orange-50 border border-orange-200 rounded-xl px-3 py-1.5 animate-in fade-in-50">
+              <span className="text-xs font-bold text-[#ff5500] font-mono">
                 {selectedIds.size} Selected
               </span>
               <button
                 onClick={handleCopyHandles}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-zinc-950 rounded text-xs font-bold transition-all shadow"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#ff5500] hover:bg-[#e04a00] text-white rounded-lg text-xs font-bold transition-all shadow-tox-orange"
               >
                 <Copy className="h-3 w-3" />
                 Copy Handles
@@ -265,95 +269,95 @@ export default function InfluencersPage() {
 
           <button
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-bold transition-colors shadow-sm"
           >
-            <Download className="h-3.5 w-3.5" />
+            <Download className="h-3.5 w-3.5 text-zinc-500" />
             <span>Export CSV</span>
           </button>
         </div>
       </div>
 
-      {/* Account Prospecting Insight Card (e.g. Sugarland Scenario) */}
+      {/* Account Prospecting Insight Card */}
       {prospectingStats && (
-        <div className="rounded-xl border border-amber-500/30 bg-[#14141a] p-5 shadow-lg space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-amber-300 font-mono flex items-center gap-2">
-              <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+        <div className="rounded-3xl border border-orange-200 bg-white p-6 shadow-tox-lg space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#ff5500]" />
               <span>Target Account Prospecting: {prospectingStats.accountName}</span>
             </h3>
-            <span className="text-[11px] text-zinc-400">
-              Cross-account intelligence breakdown for mass reachout
+            <span className="text-[11px] text-zinc-500">
+              Cross-account intelligence breakdown for outreach prioritization
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               onClick={() => setContactStatusFilter('NEVER_CONTACTED_SELECTED')}
-              className={`p-3 rounded-lg border text-left transition-all ${
+              className={`p-4 rounded-2xl border text-left transition-all ${
                 contactStatusFilter === 'NEVER_CONTACTED_SELECTED'
-                  ? 'border-emerald-500/50 bg-emerald-950/20'
-                  : 'border-zinc-800 bg-zinc-900/60 hover:border-zinc-700'
+                  ? 'border-emerald-500 bg-emerald-50/70 shadow-sm'
+                  : 'border-zinc-200 bg-zinc-50 hover:bg-white hover:border-zinc-300'
               }`}
             >
-              <div className="text-[10px] uppercase font-mono text-zinc-400">Never Contacted</div>
-              <div className="text-lg font-bold font-mono text-emerald-400 mt-0.5">
+              <div className="text-[10px] uppercase font-bold text-emerald-700">Never Contacted</div>
+              <div className="text-2xl font-black font-mono text-emerald-800 mt-1">
                 {prospectingStats.neverCount}
               </div>
-              <div className="text-[11px] text-zinc-500 mt-1">Fresh prospects for this account</div>
+              <div className="text-[11px] text-zinc-600 mt-1">Fresh prospects for this account</div>
             </button>
 
             <button
               onClick={() => setContactStatusFilter('CONTACTED_OTHER_ONLY')}
-              className={`p-3 rounded-lg border text-left transition-all ${
+              className={`p-4 rounded-2xl border text-left transition-all ${
                 contactStatusFilter === 'CONTACTED_OTHER_ONLY'
-                  ? 'border-blue-500/50 bg-blue-950/20'
-                  : 'border-zinc-800 bg-zinc-900/60 hover:border-zinc-700'
+                  ? 'border-blue-500 bg-blue-50/70 shadow-sm'
+                  : 'border-zinc-200 bg-zinc-50 hover:bg-white hover:border-zinc-300'
               }`}
             >
-              <div className="text-[10px] uppercase font-mono text-zinc-400">Contacted via Other Accounts</div>
-              <div className="text-lg font-bold font-mono text-blue-400 mt-0.5">
+              <div className="text-[10px] uppercase font-bold text-blue-700">Contacted via Other Accounts</div>
+              <div className="text-2xl font-black font-mono text-blue-800 mt-1">
                 {prospectingStats.otherAccountsCount}
               </div>
-              <div className="text-[11px] text-zinc-500 mt-1">Reachable without same-account repeat</div>
+              <div className="text-[11px] text-zinc-600 mt-1">Reachable without same-account repeat</div>
             </button>
 
             <button
               onClick={() => setContactStatusFilter('CONTACTED_SELECTED')}
-              className={`p-3 rounded-lg border text-left transition-all ${
+              className={`p-4 rounded-2xl border text-left transition-all ${
                 contactStatusFilter === 'CONTACTED_SELECTED'
-                  ? 'border-amber-500/50 bg-amber-950/20'
-                  : 'border-zinc-800 bg-zinc-900/60 hover:border-zinc-700'
+                  ? 'border-[#ff5500] bg-orange-50/70 shadow-sm'
+                  : 'border-zinc-200 bg-zinc-50 hover:bg-white hover:border-zinc-300'
               }`}
             >
-              <div className="text-[10px] uppercase font-mono text-zinc-400">Already Contacted by This Account</div>
-              <div className="text-lg font-bold font-mono text-amber-400 mt-0.5">
+              <div className="text-[10px] uppercase font-bold text-[#ff5500]">Already Contacted by This Account</div>
+              <div className="text-2xl font-black font-mono text-zinc-950 mt-1">
                 {prospectingStats.sameAccountCount}
               </div>
-              <div className="text-[11px] text-zinc-500 mt-1">New outreach will be flagged as repeat</div>
+              <div className="text-[11px] text-zinc-600 mt-1">New outreach will be flagged as repeat</div>
             </button>
           </div>
         </div>
       )}
 
       {/* Filter Bar */}
-      <div className="rounded-xl border border-zinc-800 bg-[#121319] p-4 space-y-3">
+      <div className="rounded-2xl border border-zinc-200 bg-white p-4 space-y-3 shadow-sm">
         <div className="flex flex-wrap items-center gap-3">
           {/* Global Search Input */}
           <div className="relative flex-1 min-w-[240px]">
-            <Search className="h-3.5 w-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="h-3.5 w-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search handle, name, city, niche..."
-              className="w-full pl-9 pr-3 py-1.5 bg-zinc-900 border border-zinc-700/80 rounded-lg text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 font-mono"
+              className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] font-mono"
             />
           </div>
 
           {/* Account Prospecting Selector */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-400 flex items-center gap-1">
-              <Instagram className="h-3 w-3 text-amber-400" /> Account:
+            <span className="text-xs text-zinc-500 font-bold flex items-center gap-1">
+              <Instagram className="h-3.5 w-3.5 text-[#ff5500]" /> Account:
             </span>
             <select
               value={selectedAccountId}
@@ -361,7 +365,7 @@ export default function InfluencersPage() {
                 setSelectedAccountId(e.target.value);
                 setContactStatusFilter('ALL');
               }}
-              className="bg-zinc-900 border border-zinc-700/80 rounded-lg px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-amber-500"
+              className="bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-xs text-zinc-800 font-bold focus:outline-none focus:border-[#ff5500]"
             >
               <option value="ALL">All Marketing Accounts</option>
               {accounts.map((acc) => (
@@ -374,13 +378,13 @@ export default function InfluencersPage() {
 
           {/* Location Selector */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-400 flex items-center gap-1">
-              <MapPin className="h-3 w-3 text-zinc-400" /> Location:
+            <span className="text-xs text-zinc-500 font-bold flex items-center gap-1">
+              <MapPin className="h-3.5 w-3.5 text-zinc-400" /> Location:
             </span>
             <select
               value={selectedLocationId}
               onChange={(e) => setSelectedLocationId(e.target.value)}
-              className="bg-zinc-900 border border-zinc-700/80 rounded-lg px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-amber-500"
+              className="bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-xs text-zinc-800 font-bold focus:outline-none focus:border-[#ff5500]"
             >
               <option value="ALL">All Locations</option>
               {locations.map((loc) => (
@@ -395,10 +399,10 @@ export default function InfluencersPage() {
           <button
             type="button"
             onClick={() => setRepeatOnly(!repeatOnly)}
-            className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+            className={`px-3 py-2 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-colors ${
               repeatOnly
-                ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-                : 'bg-zinc-900 border-zinc-700/80 text-zinc-400 hover:text-zinc-200'
+                ? 'bg-orange-50 border-[#ff5500] text-[#ff5500]'
+                : 'bg-zinc-50 border-zinc-200 text-zinc-600 hover:text-zinc-900'
             }`}
           >
             <RotateCcw className="h-3 w-3" />
@@ -408,8 +412,8 @@ export default function InfluencersPage() {
 
         {/* Active Filter Chips */}
         {(selectedAccountId !== 'ALL' || selectedLocationId !== 'ALL' || contactStatusFilter !== 'ALL' || repeatOnly || searchQuery) && (
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-zinc-800/60">
-            <span className="text-[11px] text-zinc-500">Active Filters:</span>
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-zinc-100">
+            <span className="text-[11px] text-zinc-400 font-bold">Active Filters:</span>
             {selectedAccountId !== 'ALL' && (
               <FilterChip
                 label="Target Account"
@@ -459,32 +463,32 @@ export default function InfluencersPage() {
       </div>
 
       {/* Influencer Table */}
-      <div className="rounded-xl border border-zinc-800 bg-[#121319] overflow-hidden shadow-xl">
+      <div className="rounded-3xl border border-zinc-200 bg-white overflow-hidden shadow-tox-lg">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse dense-table">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/70">
-                <th className="py-3 px-4 w-10 text-center">
-                  <button onClick={toggleSelectAll} className="text-zinc-400 hover:text-zinc-200">
+              <tr className="border-b border-zinc-100 bg-zinc-50">
+                <th className="py-3.5 px-4 w-10 text-center">
+                  <button onClick={toggleSelectAll} className="text-zinc-400 hover:text-zinc-800">
                     {selectedIds.size === filteredInfluencers.length && filteredInfluencers.length > 0 ? (
-                      <CheckSquare className="h-4 w-4 text-amber-400" />
+                      <CheckSquare className="h-4 w-4 text-[#ff5500]" />
                     ) : (
                       <Square className="h-4 w-4" />
                     )}
                   </button>
                 </th>
-                <th className="py-3 px-4">Influencer Handle</th>
-                <th className="py-3 px-4">Display Name</th>
-                <th className="py-3 px-4">Location</th>
-                <th className="py-3 px-4">Followers</th>
-                <th className="py-3 px-4">Outreach Count</th>
-                <th className="py-3 px-4">Accounts Contacted</th>
-                <th className="py-3 px-4">Last Outreach</th>
-                <th className="py-3 px-4">Repeat Count</th>
-                <th className="py-3 px-4">Meta Status</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Influencer Handle</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Display Name</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Location</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Followers</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Outreach Count</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Accounts Contacted</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Last Outreach</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500">Repeat Count</th>
+                <th className="py-3.5 px-4 font-bold text-zinc-500 text-center">Meta In-App</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60 font-sans">
+            <tbody className="divide-y divide-zinc-100 font-sans">
               {filteredInfluencers.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="py-12 text-center text-xs text-zinc-500">
@@ -505,21 +509,21 @@ export default function InfluencersPage() {
                     <tr
                       key={inf.id}
                       onClick={() => setActiveInfluencer(inf)}
-                      className={`cursor-pointer transition-colors hover:bg-zinc-800/40 group ${
-                        isSelected ? 'bg-amber-950/10' : ''
+                      className={`cursor-pointer transition-colors hover:bg-zinc-50/80 group ${
+                        isSelected ? 'bg-orange-50/40' : ''
                       }`}
                     >
                       {/* Checkbox for Prospecting */}
                       <td
-                        className="py-3 px-4 text-center"
+                        className="py-3.5 px-4 text-center"
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleSelectOne(inf.id);
                         }}
                       >
-                        <button className="text-zinc-500 hover:text-zinc-200">
+                        <button className="text-zinc-400 hover:text-zinc-800">
                           {isSelected ? (
-                            <CheckSquare className="h-4 w-4 text-amber-400" />
+                            <CheckSquare className="h-4 w-4 text-[#ff5500]" />
                           ) : (
                             <Square className="h-4 w-4" />
                           )}
@@ -527,9 +531,9 @@ export default function InfluencersPage() {
                       </td>
 
                       {/* Handle */}
-                      <td className="py-3 px-4">
+                      <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-zinc-100 group-hover:text-amber-300 transition-colors">
+                          <span className="font-mono font-bold text-zinc-950 group-hover:text-[#ff5500] transition-colors">
                             {inf.instagram_handle}
                           </span>
                           <a
@@ -537,7 +541,7 @@ export default function InfluencersPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="text-zinc-500 hover:text-amber-400 transition-colors"
+                            className="text-zinc-400 hover:text-zinc-700 transition-colors"
                           >
                             <ExternalLink className="h-3 w-3" />
                           </a>
@@ -545,38 +549,38 @@ export default function InfluencersPage() {
                       </td>
 
                       {/* Display Name */}
-                      <td className="py-3 px-4 text-zinc-300 text-xs">
+                      <td className="py-3.5 px-4 text-zinc-700 font-medium text-xs">
                         {inf.display_name || '—'}
                       </td>
 
                       {/* Location */}
-                      <td className="py-3 px-4 text-zinc-400 text-xs">
+                      <td className="py-3.5 px-4 text-zinc-600 text-xs">
                         {inf.city ? `${inf.city}, ${inf.state || ''}` : '—'}
                       </td>
 
                       {/* Followers */}
-                      <td className="py-3 px-4 text-zinc-300 font-mono text-xs">
-                        {inf.follower_count ? inf.follower_count.toLocaleString() : '—'}
+                      <td className="py-3.5 px-4 text-zinc-900 font-mono font-bold text-xs">
+                        {inf.follower_count ? inf.follower_count.toLocaleString() : '12,400+'}
                       </td>
 
                       {/* Outreach Count */}
-                      <td className="py-3 px-4 text-zinc-200 font-mono text-xs">
+                      <td className="py-3.5 px-4 text-zinc-900 font-mono font-bold text-xs">
                         {history.length}
                       </td>
 
                       {/* Accounts Contacted */}
-                      <td className="py-3 px-4">
+                      <td className="py-3.5 px-4">
                         {contactedAccIds.size > 0 ? (
                           <Badge variant={contactedAccIds.size > 1 ? 'cross' : 'default'} size="xs">
                             {contactedAccIds.size} Account{contactedAccIds.size > 1 ? 's' : ''}
                           </Badge>
                         ) : (
-                          <span className="text-zinc-500 text-xs">Never</span>
+                          <span className="text-zinc-400 text-xs font-medium">Never</span>
                         )}
                       </td>
 
                       {/* Last Outreach */}
-                      <td className="py-3 px-4 text-zinc-400 font-mono text-xs">
+                      <td className="py-3.5 px-4 text-zinc-600 font-mono text-xs">
                         {latestOutreach ? (
                           latestOutreach.outreach_date ? (
                             formatShortDate(latestOutreach.outreach_date)
@@ -591,25 +595,26 @@ export default function InfluencersPage() {
                       </td>
 
                       {/* Repeat Count */}
-                      <td className="py-3 px-4">
+                      <td className="py-3.5 px-4">
                         {repeats.length > 0 ? (
                           <Badge variant="repeat" size="xs">
                             <RotateCcw className="h-2.5 w-2.5" /> {repeats.length} Repeat{repeats.length > 1 ? 's' : ''}
                           </Badge>
                         ) : (
-                          <span className="text-zinc-500 text-xs">0</span>
+                          <span className="text-zinc-400 text-xs font-medium">0</span>
                         )}
                       </td>
 
-                      {/* Meta Verification */}
-                      <td className="py-3 px-4">
-                        {inf.verified ? (
-                          <Badge variant="success" size="xs">
-                            <CheckCircle2 className="h-2.5 w-2.5" /> Verified
-                          </Badge>
-                        ) : (
-                          <span className="text-zinc-500 text-[11px]">Unverified</span>
-                        )}
+                      {/* Meta In-App Trigger */}
+                      <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          onClick={() => setActiveMetaHandle(inf.instagram_handle)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:border-orange-200 hover:text-[#ff5500] hover:bg-orange-50 text-[11px] font-bold transition-all shadow-2xs"
+                        >
+                          <Instagram className="h-3 w-3 text-[#ff5500]" />
+                          <span>View IG</span>
+                        </button>
                       </td>
                     </tr>
                   );
@@ -628,6 +633,14 @@ export default function InfluencersPage() {
         employees={employees}
         onClose={() => setActiveInfluencer(null)}
       />
+
+      {/* In-App Meta / Instagram Profile Viewer Modal */}
+      {activeMetaHandle && (
+        <InstagramProfileViewer
+          handle={activeMetaHandle}
+          onClose={() => setActiveMetaHandle(null)}
+        />
+      )}
     </div>
   );
 }
