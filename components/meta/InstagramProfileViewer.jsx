@@ -20,6 +20,9 @@ import {
   MapPin,
   Calendar,
   Layers,
+  Globe,
+  ShieldCheck,
+  RefreshCw,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge.jsx';
 import { useToast } from '@/components/ui/Toast.jsx';
@@ -27,103 +30,69 @@ import { db } from '@/lib/db/provider.js';
 import { normalizeHandle } from '@/lib/normalization.js';
 import { formatOutreachDate } from '@/lib/utils.js';
 
-// High quality curated lifestyle & wellness photos for simulated IG feed
-const FEED_PHOTOS = [
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80',
-];
-
 export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect }) {
   const { addToast } = useToast();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
-  const [internalInfluencer, setInternalInfluencer] = useState(null);
-  const [internalOutreach, setInternalOutreach] = useState([]);
+  const [internalData, setInternalData] = useState({ exists: false, influencer: null, outreachHistory: [] });
   const [accounts, setAccounts] = useState([]);
   const [activeTab, setActiveTab] = useState('POSTS'); // POSTS, TOX_HISTORY
+  const [imageErrorMap, setImageErrorMap] = useState({});
 
   useEffect(() => {
     if (handle) {
-      loadProfile(handle);
+      loadLiveProfile(handle);
     }
   }, [handle]);
 
-  const loadProfile = async (rawHandle) => {
+  const loadLiveProfile = async (rawHandle) => {
     setLoading(true);
     const norm = normalizeHandle(rawHandle);
 
-    // 1. Check if influencer exists in internal Tox database
-    const existing = await db.getInfluencerByHandle(norm.normalized);
-    setInternalInfluencer(existing);
+    try {
+      // 1. Fetch real live Instagram profile data from our live Meta API endpoint
+      const res = await fetch(`/api/meta/profile?handle=${encodeURIComponent(norm.normalized)}`);
+      const data = await res.json();
 
-    const allAccounts = await db.getAccounts();
-    setAccounts(allAccounts);
+      const allAccounts = await db.getAccounts();
+      setAccounts(allAccounts);
 
-    let outreach = [];
-    if (existing) {
-      outreach = await db.getOutreachRecords({ influencer_id: existing.id });
-      setInternalOutreach(outreach);
-    } else {
-      setInternalOutreach([]);
+      if (data && data.profile) {
+        setProfileData(data.profile);
+        setInternalData(data.internal || { exists: false, influencer: null, outreachHistory: [] });
+      } else {
+        throw new Error(data?.error || 'Failed to fetch live profile');
+      }
+    } catch (err) {
+      console.warn('Live Instagram fetch error, providing local fallback:', err);
+      // Fallback
+      const existing = await db.getInfluencerByHandle(norm.normalized);
+      const outreach = existing ? await db.getOutreachRecords({ influencer_id: existing.id }) : [];
+      setProfileData({
+        isLive: false,
+        username: norm.normalized,
+        formattedHandle: norm.formatted,
+        displayName: existing?.display_name || norm.normalized,
+        bio: existing?.bio || `Instagram creator @${norm.normalized}`,
+        followerCount: existing?.follower_count ? existing.follower_count.toLocaleString() : '10K+',
+        followingCount: '—',
+        postCount: '—',
+        avatarUrl: null,
+        verified: !!existing?.verified,
+        instagramUrl: norm.url,
+        posts: null,
+        source: 'Database Fallback',
+      });
+      setInternalData({
+        exists: !!existing,
+        influencer: existing,
+        outreachHistory: outreach,
+      });
+    } finally {
+      setLoading(false);
     }
-
-    // 2. Build or resolve Instagram Meta Profile Data
-    // Generate deterministic rich profile numbers based on handle hash
-    let hash = 0;
-    for (let i = 0; i < norm.normalized.length; i++) {
-      hash = (hash << 5) - hash + norm.normalized.charCodeAt(i);
-      hash |= 0;
-    }
-    const absHash = Math.abs(hash);
-
-    const followerCount = existing?.follower_count || 12000 + (absHash % 480000);
-    const followingCount = 400 + (absHash % 1200);
-    const postCount = 80 + (absHash % 600);
-
-    const formattedName = norm.normalized
-      .split(/[._]/)
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ');
-
-    const sampleBio = existing?.bio || `Wellness & lymphatic drainage enthusiast ✨\n📍 ${existing?.city || 'Dallas / Austin, TX'}\n💌 Collabs: ${norm.normalized}@influencerpr.com\nlinktr.ee/${norm.normalized}`;
-
-    // Generate 9 simulated posts
-    const posts = FEED_PHOTOS.map((img, idx) => ({
-      id: `post-${idx}`,
-      imageUrl: img,
-      likes: Math.floor(followerCount * 0.04 + (idx * 37) % 800),
-      comments: Math.floor(followerCount * 0.003 + (idx * 9) % 90),
-      caption: idx === 0
-        ? `Post-lymphatic drainage session feeling lighter than ever! Thank you for the treatment 🤍✨ #wellness #healthylifestyle`
-        : `Self care Sunday routine 🫧 Hydration + movement + body care`,
-      date: `${idx + 1}d ago`,
-    }));
-
-    setProfileData({
-      username: norm.normalized,
-      formattedHandle: norm.formatted,
-      displayName: existing?.display_name || formattedName,
-      avatarUrl: FEED_PHOTOS[absHash % FEED_PHOTOS.length],
-      followerCount,
-      followingCount,
-      postCount,
-      bio: sampleBio,
-      verified: existing ? existing.verified : absHash % 3 === 0,
-      posts,
-      url: norm.url,
-      isInDatabase: !!existing,
-    });
-
-    setLoading(false);
   };
 
   const handleCopyHandle = () => {
@@ -145,6 +114,15 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
     onClose();
   };
 
+  const handleImageError = (id, originalUrl) => {
+    if (!imageErrorMap[id]) {
+      setImageErrorMap((prev) => ({
+        ...prev,
+        [id]: `/api/meta/proxy-image?url=${encodeURIComponent(originalUrl)}`,
+      }));
+    }
+  };
+
   if (!handle) return null;
 
   return (
@@ -156,62 +134,79 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
       <div className="relative w-full max-w-3xl bg-white rounded-3xl border border-zinc-200 shadow-2xl overflow-hidden flex flex-col max-h-[92vh] z-10 animate-in zoom-in-95 duration-200">
         {/* Instagram In-App Navigation Bar */}
         <div className="px-6 py-3.5 border-b border-zinc-200 flex items-center justify-between bg-white select-none">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <div className="h-7 w-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-xs">
               <Instagram className="h-4 w-4" />
             </div>
-            <span className="font-bold text-sm text-zinc-900 tracking-tight font-sans">
-              Instagram Meta Viewer
+            <span className="font-black text-sm text-zinc-950 tracking-tight font-sans">
+              Instagram Live In-App Profile
             </span>
-            <Badge variant="primary" size="xs">
-              In-App Browser
-            </Badge>
+            {profileData?.isLive ? (
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Live Meta Data
+              </span>
+            ) : (
+              <Badge variant="warning" size="xs">
+                Offline Mode
+              </Badge>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopyHandle}
-              className="px-2.5 py-1 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="px-2.5 py-1 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-bold flex items-center gap-1.5 transition-colors"
             >
-              <Copy className="h-3 w-3" />
+              <Copy className="h-3 w-3 text-[#ff5500]" />
               <span>Copy</span>
             </button>
             <a
-              href={profileData?.url}
+              href={profileData?.instagramUrl || `https://www.instagram.com/${handle}/`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-colors"
-              title="Open Official Instagram"
+              className="px-2.5 py-1 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 text-xs font-bold flex items-center gap-1.5 transition-colors"
+              title="Open Official Instagram Page in New Tab"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5 text-zinc-500" />
+              <span>Open on Instagram</span>
             </a>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
+              className="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors ml-1"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
           </div>
         </div>
 
         {loading ? (
-          <div className="py-20 text-center space-y-3">
+          <div className="py-24 text-center space-y-3">
             <div className="h-8 w-8 rounded-full border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto" />
-            <p className="text-xs text-zinc-500 font-mono">Fetching Instagram profile & Tox intelligence...</p>
+            <p className="text-xs text-zinc-700 font-bold">Connecting to Instagram Meta servers for live data...</p>
+            <p className="text-[11px] text-zinc-400 font-mono">Resolving followers, bio, verified status & recent posts</p>
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto">
             {/* Profile Header */}
             <div className="p-6 md:p-8 space-y-6 bg-white border-b border-zinc-100">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                {/* Avatar with Story Ring */}
+                {/* Real Avatar with Instagram Story Ring */}
                 <div className="p-1 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0">
                   <div className="p-0.5 bg-white rounded-full">
-                    <img
-                      src={profileData.avatarUrl}
-                      alt={profileData.username}
-                      className="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover shadow-inner"
-                    />
+                    {profileData.avatarUrl ? (
+                      <img
+                        src={imageErrorMap['avatar'] || profileData.avatarUrl}
+                        onError={() => handleImageError('avatar', profileData.avatarUrl)}
+                        referrerPolicy="no-referrer"
+                        alt={profileData.username}
+                        className="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover shadow-inner"
+                      />
+                    ) : (
+                      <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-orange-400 to-[#ff5500] text-white flex items-center justify-center font-black text-3xl font-mono">
+                        @
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -219,18 +214,18 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                 <div className="flex-1 text-center sm:text-left space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
                     <div className="flex items-center justify-center sm:justify-start gap-2">
-                      <h2 className="text-xl font-bold font-mono text-zinc-900">
+                      <h2 className="text-xl font-black font-mono text-zinc-950">
                         {profileData.formattedHandle}
                       </h2>
                       {profileData.verified && (
-                        <CheckCircle2 className="h-4 w-4 text-sky-500 fill-sky-500" />
+                        <CheckCircle2 className="h-4 w-4 text-sky-500 fill-sky-500" title="Verified Creator" />
                       )}
                     </div>
 
                     <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={handleAddToToxAndLog}
-                        className="px-4 py-1.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all flex items-center gap-1.5"
+                        className="px-5 py-2 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all flex items-center gap-1.5"
                       >
                         <Send className="h-3.5 w-3.5" />
                         <span>Log Outreach</span>
@@ -238,93 +233,106 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                     </div>
                   </div>
 
-                  {/* Followers Counts */}
+                  {/* Real Live Followers Counts */}
                   <div className="flex items-center justify-center sm:justify-start gap-6 text-xs text-zinc-800">
                     <div>
-                      <span className="font-bold text-zinc-900 font-mono">
-                        {profileData.postCount.toLocaleString()}
+                      <span className="font-black text-zinc-950 font-mono text-sm">
+                        {profileData.postCount}
                       </span>{' '}
-                      <span className="text-zinc-500">posts</span>
+                      <span className="text-zinc-500 font-medium">posts</span>
                     </div>
                     <div>
-                      <span className="font-bold text-zinc-900 font-mono">
-                        {profileData.followerCount.toLocaleString()}
+                      <span className="font-black text-zinc-950 font-mono text-sm">
+                        {profileData.followerCount}
                       </span>{' '}
-                      <span className="text-zinc-500">followers</span>
+                      <span className="text-zinc-500 font-medium">followers</span>
                     </div>
                     <div>
-                      <span className="font-bold text-zinc-900 font-mono">
-                        {profileData.followingCount.toLocaleString()}
+                      <span className="font-black text-zinc-950 font-mono text-sm">
+                        {profileData.followingCount}
                       </span>{' '}
-                      <span className="text-zinc-500">following</span>
+                      <span className="text-zinc-500 font-medium">following</span>
                     </div>
                   </div>
 
-                  {/* Display Name & Bio */}
+                  {/* Real Display Name & Bio */}
                   <div className="space-y-1 pt-1">
-                    <div className="font-bold text-xs text-zinc-900">
+                    <div className="font-bold text-sm text-zinc-950">
                       {profileData.displayName}
                     </div>
-                    <p className="text-xs text-zinc-600 whitespace-pre-line leading-relaxed">
+                    <p className="text-xs text-zinc-700 whitespace-pre-line leading-relaxed font-sans">
                       {profileData.bio}
                     </p>
+                    <a
+                      href={profileData.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] text-[#ff5500] hover:underline font-bold pt-0.5"
+                    >
+                      <Globe className="h-3 w-3" />
+                      <span>instagram.com/{profileData.username}</span>
+                    </a>
                   </div>
                 </div>
               </div>
 
               {/* Integrated Tox Technique Intelligence Box */}
-              <div className="rounded-2xl border border-orange-200 bg-gradient-to-r from-orange-50/80 via-white to-orange-50/40 p-4 space-y-2.5 shadow-xs">
+              <div className="rounded-2xl border border-orange-200 bg-gradient-to-r from-orange-50/90 via-white to-orange-50/50 p-4 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-lg bg-[#ff5500] text-white flex items-center justify-center text-xs font-bold shadow-xs">
+                    <div className="h-6 w-6 rounded-lg bg-[#ff5500] text-white flex items-center justify-center text-xs font-black shadow-xs">
                       T
                     </div>
-                    <span className="text-xs font-bold text-zinc-900 font-mono">
-                      Tox Technique Internal Intelligence
+                    <span className="text-xs font-black text-zinc-950 font-mono">
+                      The Tox Technique Dossier
                     </span>
                   </div>
 
-                  {profileData.isInDatabase ? (
+                  {internalData.exists ? (
                     <Badge variant="success" size="xs">
                       ✓ In Tox Database
                     </Badge>
                   ) : (
                     <Badge variant="warning" size="xs">
-                      Not In Database Yet
+                      New Creator — Not in DB
                     </Badge>
                   )}
                 </div>
 
-                {profileData.isInDatabase ? (
-                  <div className="space-y-2">
+                {internalData.exists ? (
+                  <div className="space-y-2.5">
                     <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                      <div className="p-2 rounded-lg bg-white border border-zinc-200">
-                        <span className="text-[10px] text-zinc-500 uppercase font-mono block">Total Outreach</span>
-                        <span className="font-bold font-mono text-zinc-900">{internalOutreach.length}</span>
-                      </div>
-                      <div className="p-2 rounded-lg bg-white border border-zinc-200">
-                        <span className="text-[10px] text-zinc-500 uppercase font-mono block">Accounts</span>
-                        <span className="font-bold font-mono text-blue-700">
-                          {new Set(internalOutreach.map((o) => o.account_id)).size}
+                      <div className="p-2.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
+                        <span className="text-[10px] text-zinc-500 uppercase font-bold block">Total Touches</span>
+                        <span className="font-black font-mono text-zinc-950 text-sm">
+                          {internalData.outreachHistory.length}
                         </span>
                       </div>
-                      <div className="p-2 rounded-lg bg-white border border-zinc-200">
-                        <span className="text-[10px] text-zinc-500 uppercase font-mono block">Repeats</span>
-                        <span className="font-bold font-mono text-[#ff5500]">
-                          {internalOutreach.filter((o) => o.is_repeat_same_account).length}
+                      <div className="p-2.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
+                        <span className="text-[10px] text-zinc-500 uppercase font-bold block">Accounts</span>
+                        <span className="font-black font-mono text-blue-600 text-sm">
+                          {new Set(internalData.outreachHistory.map((o) => o.account_id)).size}
+                        </span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
+                        <span className="text-[10px] text-zinc-500 uppercase font-bold block">Repeats</span>
+                        <span className="font-black font-mono text-[#ff5500] text-sm">
+                          {internalData.outreachHistory.filter((o) => o.is_repeat_same_account).length}
                         </span>
                       </div>
                     </div>
 
-                    {internalOutreach.length > 0 && (
-                      <div className="text-[11px] text-zinc-600 bg-white p-2 rounded-lg border border-zinc-200 space-y-1">
-                        <div className="font-semibold text-zinc-800">Prior Outreach Touchpoints:</div>
-                        {internalOutreach.slice(0, 3).map((o) => {
+                    {internalData.outreachHistory.length > 0 && (
+                      <div className="text-xs text-zinc-700 bg-white p-3 rounded-xl border border-zinc-200 space-y-1.5 shadow-2xs">
+                        <div className="font-bold text-zinc-900 text-[11px]">Past Outreach Timeline:</div>
+                        {internalData.outreachHistory.slice(0, 3).map((o) => {
                           const acc = accounts.find((a) => a.id === o.account_id);
                           return (
-                            <div key={o.id} className="flex items-center justify-between text-[10px]">
-                              <span>Account: <strong className="text-zinc-900">{acc?.account_name || 'Account'}</strong></span>
-                              <span className="font-mono text-zinc-500">{o.outreach_date ? formatOutreachDate(o.outreach_date) : 'Historical'}</span>
+                            <div key={o.id} className="flex items-center justify-between text-[11px]">
+                              <span>Account: <strong className="text-zinc-900">{acc?.account_name || 'Marketing Account'}</strong></span>
+                              <span className="font-mono text-zinc-500 font-medium">
+                                {o.outreach_date ? formatOutreachDate(o.outreach_date) : 'Historical'}
+                              </span>
                             </div>
                           );
                         })}
@@ -333,12 +341,12 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                   </div>
                 ) : (
                   <div className="flex items-center justify-between pt-1">
-                    <p className="text-xs text-zinc-600">
-                      This creator hasn't been logged in your Tox outreach database yet.
+                    <p className="text-xs text-zinc-600 font-medium">
+                      This creator has not been contacted yet by any of your marketing accounts.
                     </p>
                     <button
                       onClick={handleAddToToxAndLog}
-                      className="px-3 py-1 rounded-lg bg-zinc-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs"
+                      className="px-3.5 py-1.5 rounded-xl bg-zinc-950 hover:bg-black text-white text-xs font-bold transition-all shadow-xs"
                     >
                       + Add & Log
                     </button>
@@ -351,45 +359,74 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
             <div className="flex border-b border-zinc-200 text-xs font-bold font-mono text-zinc-500 uppercase tracking-wider justify-center gap-8 bg-slate-50/50">
               <button
                 onClick={() => setActiveTab('POSTS')}
-                className={`py-3 flex items-center gap-1.5 border-b-2 transition-colors ${
+                className={`py-3.5 flex items-center gap-1.5 border-b-2 transition-colors ${
                   activeTab === 'POSTS'
-                    ? 'border-zinc-900 text-zinc-900'
-                    : 'border-transparent hover:text-zinc-700'
+                    ? 'border-[#ff5500] text-[#ff5500]'
+                    : 'border-transparent hover:text-zinc-900'
                 }`}
               >
                 <Layers className="h-3.5 w-3.5" />
-                <span>Recent Posts ({profileData.posts.length})</span>
+                <span>Recent Posts ({profileData.posts ? profileData.posts.length : 'Live Feed'})</span>
               </button>
             </div>
 
             {/* 3-Column Instagram Post Grid */}
             <div className="p-6">
-              <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                {profileData.posts.map((post) => (
-                  <div
-                    key={post.id}
-                    className="relative group aspect-square rounded-xl overflow-hidden bg-zinc-100 cursor-pointer border border-zinc-200"
-                  >
-                    <img
-                      src={post.imageUrl}
-                      alt="Instagram post"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+              {profileData.posts && profileData.posts.length > 0 ? (
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  {profileData.posts.map((post, idx) => (
+                    <a
+                      key={post.id || idx}
+                      href={post.url || profileData.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative group aspect-square rounded-2xl overflow-hidden bg-zinc-100 cursor-pointer border border-zinc-200 block shadow-xs"
+                    >
+                      <img
+                        src={imageErrorMap[post.id] || post.imageUrl}
+                        onError={() => handleImageError(post.id, post.imageUrl)}
+                        referrerPolicy="no-referrer"
+                        alt="Instagram post"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
 
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 text-white font-bold text-xs font-mono">
-                      <div className="flex items-center gap-1">
-                        <Heart className="h-4 w-4 fill-white" />
-                        <span>{post.likes}</span>
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 text-white font-bold text-xs font-mono p-2 text-center">
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1">
+                            <Heart className="h-4 w-4 fill-white" />
+                            <span>{post.likes}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <MessageCircle className="h-4 w-4 fill-white" />
+                            <span>{post.comments}</span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-zinc-300 underline underline-offset-2">View on Instagram ↗</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <MessageCircle className="h-4 w-4 fill-white" />
-                        <span>{post.comments}</span>
-                      </div>
-                    </div>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-12 text-center space-y-3">
+                  <Instagram className="h-10 w-10 text-zinc-400 mx-auto" />
+                  <div className="text-sm font-bold text-zinc-800">
+                    {profileData.displayName}'s Profile ({profileData.formattedHandle})
                   </div>
-                ))}
-              </div>
+                  <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                    Open the live Instagram page to view all {profileData.postCount} photos, videos, and stories.
+                  </p>
+                  <a
+                    href={profileData.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-bold transition-all shadow-md"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    <span>Open Official Instagram Feed</span>
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         )}
