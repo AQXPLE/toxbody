@@ -41,9 +41,9 @@ export default function AnalyticsPage() {
 
   if (!metrics) {
     return (
-      <div className="text-xs text-zinc-500 font-mono py-16 text-center space-y-2">
-        <div className="h-6 w-6 rounded-full border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto" />
-        <p>Loading analytics engine...</p>
+      <div className="text-xs text-zinc-500 font-mono py-24 text-center space-y-3">
+        <div className="h-7 w-7 rounded-full border-2 border-tox-orange border-t-transparent animate-spin mx-auto shadow-tox-orange" />
+        <p className="tracking-wide">Initializing analytics engine...</p>
       </div>
     );
   }
@@ -86,21 +86,21 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-[11px] font-bold mb-2">
-            <BarChart3 className="h-3 w-3" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-tox-orange/30 bg-tox-orange/10 text-tox-orange text-xs font-mono font-medium mb-3 backdrop-blur-md">
+            <BarChart3 className="h-3.5 w-3.5 text-tox-orange" />
             <span>Operations Intelligence</span>
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-zinc-950 flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5">
             Operational & Team Analytics
           </h1>
-          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
-            Outreach volumes, repeat rate auditing, account utilization, and staff member performance.
+          <p className="text-xs text-zinc-400 mt-1.5 max-w-xl leading-relaxed">
+            Outreach volumes, repeat rate auditing, regional account utilization, and staff member throughput.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Badge variant="primary" size="sm">
             Total Outreach: {metrics.totalOutreach}
           </Badge>
@@ -112,98 +112,112 @@ export default function AnalyticsPage() {
 
       {/* Top Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-1 shadow-tox-lg">
-          <div className="text-[11px] uppercase tracking-wider font-bold text-zinc-500">
+        <div className="glass-panel rounded-3xl p-6 space-y-2 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+          <div className="text-[11px] uppercase tracking-wider font-mono font-medium text-zinc-400">
             Outreach Today
           </div>
-          <div className="text-3xl font-black font-mono text-zinc-950">{metrics.outreachToday}</div>
-          <div className="text-[11px] text-zinc-500 font-medium">Current active business day</div>
+          <div className="text-3xl sm:text-4xl font-bold font-mono text-white tracking-tight">
+            {metrics.outreachToday}
+          </div>
+          <div className="text-xs text-zinc-500 font-mono">Current active business day</div>
         </div>
 
-        <div className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-1 shadow-tox-lg">
-          <div className="text-[11px] uppercase tracking-wider font-bold text-zinc-500">
+        <div className="glass-panel rounded-3xl p-6 space-y-2 shadow-2xl relative overflow-hidden group border-tox-orange/20">
+          <div className="absolute -top-12 -right-12 w-28 h-28 bg-tox-orange/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="text-[11px] uppercase tracking-wider font-mono font-medium text-tox-orange">
             Outreach This Month
           </div>
-          <div className="text-3xl font-black font-mono text-[#ff5500]">{metrics.outreachThisMonth}</div>
-          <div className="text-[11px] text-zinc-500 font-medium">Rolling 30-day window</div>
+          <div className="text-3xl sm:text-4xl font-bold font-mono text-tox-orange tracking-tight">
+            {metrics.outreachThisMonth}
+          </div>
+          <div className="text-xs text-zinc-500 font-mono">Rolling 30-day window</div>
         </div>
 
-        <div className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-1 shadow-tox-lg">
-          <div className="text-[11px] uppercase tracking-wider font-bold text-zinc-500">
+        <div className="glass-panel rounded-3xl p-6 space-y-2 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+          <div className="text-[11px] uppercase tracking-wider font-mono font-medium text-zinc-400">
             Unique Influencers
           </div>
-          <div className="text-3xl font-black font-mono text-emerald-600">{metrics.uniqueInfluencersReached}</div>
-          <div className="text-[11px] text-zinc-500 font-medium">Distinct creators touched</div>
+          <div className="text-3xl sm:text-4xl font-bold font-mono text-emerald-400 tracking-tight">
+            {metrics.uniqueInfluencersReached}
+          </div>
+          <div className="text-xs text-zinc-500 font-mono">Distinct creators touched</div>
         </div>
 
-        <div className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-1 shadow-tox-lg">
-          <div className="text-[11px] uppercase tracking-wider font-bold text-zinc-500">
+        <div className="glass-panel rounded-3xl p-6 space-y-2 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+          <div className="text-[11px] uppercase tracking-wider font-mono font-medium text-zinc-400">
             Same-Account Repeats
           </div>
-          <div className="text-3xl font-black font-mono text-orange-600">{metrics.repeatOutreachCount}</div>
-          <div className="text-[11px] text-zinc-500 font-medium">{metrics.repeatRate}% overall repeat rate</div>
+          <div className="text-3xl sm:text-4xl font-bold font-mono text-amber-400 tracking-tight">
+            {metrics.repeatOutreachCount}
+          </div>
+          <div className="text-xs text-zinc-500 font-mono">{metrics.repeatRate}% overall repeat rate</div>
         </div>
       </div>
 
-      {/* Provenance breakdown */}
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-tox-lg space-y-4">
-        <h3 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center justify-between border-b border-zinc-100 pb-3">
-          <span>Outreach Record Provenance (Date Integrity Policy)</span>
-          <span className="text-xs font-normal text-zinc-500">
+      {/* Provenance Breakdown */}
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+        <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center justify-between border-b border-white/[0.08] pb-4">
+          <span className="text-white font-semibold">Outreach Record Provenance (Date Integrity Policy)</span>
+          <span className="text-xs font-normal text-zinc-500 hidden sm:inline">
             Legacy data preserves NULL dates without artificial timestamp fabrication
           </span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-5 rounded-2xl bg-zinc-50 border border-zinc-200 flex items-center justify-between">
+          <div className="p-5 rounded-2xl bg-obsidian-900/80 border border-white/[0.08] flex items-center justify-between shadow-inner">
             <div>
-              <div className="text-xs font-bold text-zinc-900">Active / Dated Outreaches</div>
-              <div className="text-[11px] text-zinc-500">Submitted with ISO timestamps via live platform</div>
+              <div className="text-xs font-semibold text-white">Active / Dated Outreaches</div>
+              <div className="text-[11px] text-zinc-400 mt-0.5">Submitted with ISO timestamps via live platform</div>
             </div>
-            <div className="text-2xl font-black font-mono text-emerald-600">{datedCount}</div>
+            <div className="text-2xl font-bold font-mono text-emerald-400">{datedCount}</div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-zinc-50 border border-zinc-200 flex items-center justify-between">
+          <div className="p-5 rounded-2xl bg-obsidian-900/80 border border-white/[0.08] flex items-center justify-between shadow-inner">
             <div>
-              <div className="text-xs font-bold text-zinc-900">Historical Undated Outreaches</div>
-              <div className="text-[11px] text-zinc-500">Imported from legacy Sheet1.tsv (dates NULL)</div>
+              <div className="text-xs font-semibold text-white">Historical Undated Outreaches</div>
+              <div className="text-[11px] text-zinc-400 mt-0.5">Imported from legacy Sheet1.tsv (dates NULL)</div>
             </div>
-            <div className="text-2xl font-black font-mono text-orange-600">{historicalCount}</div>
+            <div className="text-2xl font-bold font-mono text-tox-orange">{historicalCount}</div>
           </div>
         </div>
       </div>
 
-      {/* Account Utilization Grid */}
+      {/* Account & Staff Utilization Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Account Performance */}
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-tox-lg space-y-4">
-          <h3 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center justify-between border-b border-zinc-100 pb-3">
-            <span>Outreach Volume by Account</span>
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4">
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-white font-semibold">
+              Outreach Volume by Account
+            </h3>
             <Badge variant="primary" size="xs">
               {accounts.length} Accounts
             </Badge>
-          </h3>
+          </div>
 
-          <div className="space-y-2.5 max-h-80 overflow-y-auto">
+          <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
             {accountBreakdown.map((acc) => (
               <div
                 key={acc.id}
-                className="p-3.5 rounded-2xl border border-zinc-100 bg-zinc-50/70 hover:bg-zinc-50 flex items-center justify-between text-xs transition-colors"
+                className="p-3.5 rounded-2xl border border-white/[0.06] bg-obsidian-900/60 hover:bg-white/[0.03] flex items-center justify-between text-xs transition-colors"
               >
                 <div>
-                  <div className="font-bold text-zinc-950 flex items-center gap-2">
-                    <Instagram className="h-3.5 w-3.5 text-[#ff5500]" />
+                  <div className="font-semibold text-white flex items-center gap-2">
+                    <Instagram className="h-3.5 w-3.5 text-tox-orange" />
                     <span>{acc.name}</span>
                     <span className="font-mono text-zinc-500 text-[11px]">@{acc.handle}</span>
                   </div>
-                  <div className="text-[11px] text-zinc-500 mt-0.5 font-medium">
-                    {acc.repeats} repeat outreach touches ({acc.repeatRate}% repeat rate)
+                  <div className="text-[11px] text-zinc-400 mt-0.5 font-mono">
+                    {acc.repeats} repeat touches ({acc.repeatRate}% repeat rate)
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <div className="text-lg font-black font-mono text-zinc-950">{acc.total}</div>
-                  <div className="text-[10px] text-zinc-400 uppercase font-bold">Outreaches</div>
+                  <div className="text-base font-bold font-mono text-white">{acc.total}</div>
+                  <div className="text-[10px] text-zinc-500 uppercase font-mono">Outreaches</div>
                 </div>
               </div>
             ))}
@@ -211,35 +225,37 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Staff Performance */}
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-tox-lg space-y-4">
-          <h3 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center justify-between border-b border-zinc-100 pb-3">
-            <span>Staff Outreach Output</span>
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4">
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-white font-semibold">
+              Staff Outreach Output
+            </h3>
             <Badge variant="primary" size="xs">
               {employees.length} Staff
             </Badge>
-          </h3>
+          </div>
 
-          <div className="space-y-2.5 max-h-80 overflow-y-auto">
+          <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
             {employeeBreakdown.map((emp) => (
               <div
                 key={emp.id}
-                className="p-3.5 rounded-2xl border border-zinc-100 bg-zinc-50/70 hover:bg-zinc-50 flex items-center justify-between text-xs transition-colors"
+                className="p-3.5 rounded-2xl border border-white/[0.06] bg-obsidian-900/60 hover:bg-white/[0.03] flex items-center justify-between text-xs transition-colors"
               >
                 <div>
-                  <div className="font-bold text-zinc-950 flex items-center gap-2">
+                  <div className="font-semibold text-white flex items-center gap-2">
                     <span>{emp.name}</span>
                     <Badge variant="default" size="xs" className="uppercase font-mono text-[10px]">
                       {emp.role}
                     </Badge>
                   </div>
-                  <div className="text-[11px] text-zinc-500 mt-0.5 font-medium">
+                  <div className="text-[11px] text-zinc-400 mt-0.5 font-mono">
                     {emp.repeats} repeats logged
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <div className="text-lg font-black font-mono text-[#ff5500]">{emp.total}</div>
-                  <div className="text-[10px] text-zinc-400 uppercase font-bold">Logged</div>
+                  <div className="text-base font-bold font-mono text-tox-orange">{emp.total}</div>
+                  <div className="text-[10px] text-zinc-500 uppercase font-mono">Logged</div>
                 </div>
               </div>
             ))}

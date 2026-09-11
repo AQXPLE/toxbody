@@ -183,14 +183,14 @@ export default function MetaSearchPage() {
     <div className="space-y-8 max-w-5xl mx-auto">
       {/* Hero Header */}
       <div className="text-center space-y-3 py-6">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-xs font-bold shadow-xs">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-tox-orange/30 bg-tox-orange/10 text-tox-orange text-xs font-semibold shadow-xs">
           <Sparkles className="h-3.5 w-3.5" />
           <span>Real-Time Meta / Instagram Intelligence</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-zinc-950 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
           Live Instagram Search & Profile Explorer
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-600 max-w-xl mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto leading-relaxed">
           Type any creator name or handle to see live profile suggestions with profile pictures, follower counts, verified checkmarks, and in-app profile dossiers.
         </p>
       </div>
@@ -199,10 +199,10 @@ export default function MetaSearchPage() {
       <div ref={searchContainerRef} className="relative max-w-2xl mx-auto z-30">
         <form
           onSubmit={handleFormSubmit}
-          className="relative rounded-3xl border-2 border-zinc-200 bg-white p-2 shadow-tox-lg focus-within:border-[#ff5500] focus-within:ring-4 focus-within:ring-orange-500/10 transition-all"
+          className="relative rounded-3xl border border-white/15 bg-obsidian-950/90 backdrop-blur-xl p-2 shadow-2xl focus-within:border-tox-orange focus-within:ring-2 focus-within:ring-tox-orange/20 transition-all"
         >
           <div className="flex items-center gap-3 px-3">
-            <div className="h-10 w-10 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#ff5500] shrink-0">
+            <div className="h-10 w-10 rounded-2xl bg-tox-orange/10 border border-tox-orange/20 flex items-center justify-center text-tox-orange shrink-0">
               <Instagram className="h-5 w-5" />
             </div>
 
@@ -217,7 +217,7 @@ export default function MetaSearchPage() {
               }}
               onKeyDown={handleKeyDown}
               placeholder="Search Instagram creators (e.g. azfoodie, kendall, huda, health)..."
-              className="w-full text-sm font-mono text-zinc-950 placeholder:text-zinc-400 focus:outline-none bg-transparent"
+              className="w-full text-sm font-mono text-white placeholder:text-zinc-500 focus:outline-none bg-transparent"
               autoComplete="off"
             />
 
@@ -230,7 +230,8 @@ export default function MetaSearchPage() {
                   setSearchResults([]);
                   setDropdownOpen(false);
                 }}
-                className="p-1 rounded-full text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
+                aria-label="Clear search"
+                className="p-1 rounded-full text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -239,12 +240,12 @@ export default function MetaSearchPage() {
             {/* Spinner or Submit Button */}
             {isSearching ? (
               <div className="px-3 py-2">
-                <div className="h-4 w-4 rounded-full border-2 border-[#ff5500] border-t-transparent animate-spin" />
+                <div className="h-4 w-4 rounded-full border-2 border-tox-orange border-t-transparent animate-spin" />
               </div>
             ) : (
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-2xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all shrink-0 flex items-center gap-2"
+                className="px-6 py-2.5 rounded-2xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all shrink-0 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange"
               >
                 <Search className="h-4 w-4" />
                 <span>Search</span>
@@ -255,10 +256,10 @@ export default function MetaSearchPage() {
 
         {/* Live Instagram Autocomplete Dropdown Popover */}
         {dropdownOpen && searchResults.length > 0 && (
-          <div className="absolute left-0 right-0 top-full mt-2 rounded-3xl border border-zinc-200 bg-white shadow-2xl overflow-hidden divide-y divide-zinc-100 animate-in fade-in zoom-in-95 duration-150 max-h-96 overflow-y-auto z-50">
-            <div className="px-4 py-2 bg-zinc-50 flex items-center justify-between text-[11px] text-zinc-500 font-bold uppercase font-mono tracking-wider">
+          <div className="absolute left-0 right-0 top-full mt-2 rounded-3xl border border-white/15 bg-obsidian-950/95 shadow-2xl shadow-black backdrop-blur-2xl overflow-hidden divide-y divide-white/[0.06] animate-in fade-in zoom-in-95 duration-150 max-h-96 overflow-y-auto z-50 text-zinc-200">
+            <div className="px-4 py-2 bg-white/[0.02] flex items-center justify-between text-[11px] text-zinc-400 font-mono tracking-wider">
               <span>Matching Instagram Profiles</span>
-              <span>{searchResults.length} Found</span>
+              <span className="tabular-nums">{searchResults.length} Found</span>
             </div>
 
             {searchResults.map((item, idx) => {
@@ -269,13 +270,13 @@ export default function MetaSearchPage() {
                   key={item.id || item.username}
                   onClick={() => handleSelectCreator(item.username)}
                   className={`p-3.5 px-4 flex items-center justify-between cursor-pointer transition-colors ${
-                    isSelected ? 'bg-orange-50/80 border-l-4 border-l-[#ff5500]' : 'hover:bg-zinc-50'
+                    isSelected ? 'bg-tox-orange/10 border-l-4 border-l-tox-orange' : 'hover:bg-white/[0.04]'
                   }`}
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
                     {/* Real Profile Avatar with Instagram Story Gradient Ring */}
                     <div className="p-0.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0">
-                      <div className="p-0.5 bg-white rounded-full">
+                      <div className="p-0.5 bg-obsidian-950 rounded-full">
                         {item.avatarUrl ? (
                           <img
                             src={imageErrorMap[item.id] || item.avatarUrl}
@@ -285,7 +286,7 @@ export default function MetaSearchPage() {
                             className="h-10 w-10 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-[#ff5500] to-orange-400 text-white flex items-center justify-center font-bold text-sm font-mono">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-tox-orange to-orange-400 text-black flex items-center justify-center font-bold text-sm font-mono">
                             {item.username.charAt(0).toUpperCase()}
                           </div>
                         )}
@@ -295,25 +296,25 @@ export default function MetaSearchPage() {
                     {/* Creator Identity & Meta Info */}
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="font-mono font-bold text-sm text-zinc-950 truncate">
+                        <span className="font-mono font-semibold text-sm text-white truncate">
                           {item.formattedHandle}
                         </span>
                         {item.verified && (
-                          <CheckCircle2 className="h-4 w-4 text-sky-500 fill-sky-500 shrink-0" title="Verified Creator" />
+                          <CheckCircle2 className="h-4 w-4 text-sky-400 fill-sky-400 shrink-0" title="Verified Creator" />
                         )}
                         {item.isLivePrompt && (
-                          <span className="px-1.5 py-0.5 rounded-full bg-orange-50 text-[#ff5500] text-[9px] font-bold border border-orange-200">
+                          <span className="px-1.5 py-0.5 rounded-full bg-tox-orange/10 text-tox-orange text-[9px] font-semibold border border-tox-orange/20">
                             Live Query
                           </span>
                         )}
                       </div>
 
-                      <div className="text-xs text-zinc-600 truncate font-medium">
+                      <div className="text-xs text-zinc-400 truncate font-normal">
                         {item.displayName}
                       </div>
 
-                      <div className="text-[11px] text-zinc-600 flex items-center gap-2 pt-0.5 font-sans">
-                        <span className="font-semibold text-zinc-800">{item.followerCount} followers</span>
+                      <div className="text-[11px] text-zinc-400 flex items-center gap-2 pt-0.5 font-sans">
+                        <span className="font-medium text-zinc-200">{item.followerCount} followers</span>
                         {item.niche && <span>• {item.niche}</span>}
                         {item.location && <span>• {item.location}</span>}
                       </div>
@@ -331,7 +332,7 @@ export default function MetaSearchPage() {
                         Meta Creator
                       </Badge>
                     )}
-                    <ArrowRight className="h-4 w-4 text-zinc-400 group-hover:text-[#ff5500]" />
+                    <ArrowRight className="h-4 w-4 text-zinc-500 group-hover:text-tox-orange transition-colors" />
                   </div>
                 </div>
               );
@@ -342,12 +343,12 @@ export default function MetaSearchPage() {
 
       {/* Suggested Quick Test Handles */}
       <div className="max-w-2xl mx-auto flex flex-wrap items-center justify-center gap-2 text-xs">
-        <span className="text-zinc-500 font-bold text-[11px]">Popular Live Profiles:</span>
+        <span className="text-zinc-400 font-mono text-[11px]">Popular Live Profiles:</span>
         {recentSearches.map((h) => (
           <button
             key={h}
             onClick={() => handleSelectCreator(h)}
-            className="px-3 py-1 rounded-full border border-zinc-200 bg-white hover:border-orange-300 hover:bg-orange-50 text-zinc-800 font-mono text-xs font-bold transition-all shadow-2xs flex items-center gap-1"
+            className="px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] hover:border-tox-orange/40 hover:bg-tox-orange/10 text-zinc-300 hover:text-white font-mono text-xs font-medium transition-all shadow-xs flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
           >
             <span>{h}</span>
           </button>
@@ -355,17 +356,17 @@ export default function MetaSearchPage() {
       </div>
 
       {/* Pocket Browser Companion Section */}
-      <div className="rounded-3xl border border-orange-200 bg-gradient-to-r from-orange-50/70 via-white to-orange-50/40 p-6 sm:p-8 shadow-tox-lg space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-orange-100 pb-4">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-300 bg-white text-[#ff5500] text-[10px] font-bold">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-tox-orange/30 bg-tox-orange/10 text-tox-orange text-[10px] font-semibold">
               <Laptop className="h-3 w-3" />
               <span>Full Unrestricted Browsing</span>
             </div>
-            <h3 className="text-base font-black text-zinc-950 flex items-center gap-2">
+            <h3 className="text-base font-semibold text-white flex items-center gap-2 tracking-tight">
               <span>Tox Pocket Browser Companion</span>
             </h3>
-            <p className="text-xs text-zinc-600 max-w-xl leading-relaxed">
+            <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
               Want to review all historical posts, watch full videos, and view reels without login walls or iframe limits? Launch our 1-click Pocket Browser companion window alongside Tox Body.
             </p>
           </div>
@@ -373,7 +374,7 @@ export default function MetaSearchPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => launchPocketBrowser(pocketHandleInput || searchTerm || 'azfoodie')}
-              className="px-4 py-2 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all flex items-center gap-2 shrink-0"
+              className="px-4 py-2 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all flex items-center gap-2 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange"
             >
               <Sparkles className="h-3.5 w-3.5" />
               <span>Launch Pocket Window ↗</span>
@@ -389,12 +390,12 @@ export default function MetaSearchPage() {
               value={pocketHandleInput}
               onChange={(e) => setPocketHandleInput(e.target.value)}
               placeholder="Enter creator handle for Pocket Browser (e.g. @azfoodie)..."
-              className="w-full pl-3 pr-4 py-2 rounded-xl border border-zinc-200 bg-white text-xs font-mono text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#ff5500]"
+              className="w-full pl-3 pr-4 py-2.5 rounded-xl border border-white/10 bg-obsidian-900/90 text-xs font-mono text-white placeholder:text-zinc-500 focus:outline-none focus:border-tox-orange"
             />
           </div>
           <button
             onClick={() => launchPocketBrowser(pocketHandleInput || 'azfoodie')}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-bold transition-all shadow-2xs"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 hover:text-white text-xs font-medium transition-all shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
           >
             Open in Pocket Browser
           </button>
@@ -402,13 +403,13 @@ export default function MetaSearchPage() {
       </div>
 
       {/* Internal Database Quick Matching Section */}
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-tox-lg space-y-4">
-        <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 space-y-4">
+        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
           <div>
-            <h3 className="text-sm font-black text-zinc-950">
+            <h3 className="text-sm font-semibold text-white tracking-tight">
               Creators in Your Internal Outreach Database
             </h3>
-            <p className="text-xs text-zinc-500 mt-0.5">
+            <p className="text-xs text-zinc-400 mt-0.5">
               Click any creator below to fetch their live Instagram profile & cross-account history.
             </p>
           </div>
@@ -422,23 +423,23 @@ export default function MetaSearchPage() {
             <div
               key={inf.id}
               onClick={() => handleSelectCreator(inf.instagram_handle)}
-              className="p-4 rounded-2xl border border-zinc-200 hover:border-orange-300 hover:bg-orange-50/40 transition-all cursor-pointer group bg-zinc-50/60 flex items-center justify-between shadow-2xs"
+              className="p-4 rounded-2xl border border-white/[0.08] hover:border-tox-orange/40 hover:bg-tox-orange/[0.04] transition-all cursor-pointer group bg-white/[0.02] flex items-center justify-between shadow-xs"
             >
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-orange-100 border border-orange-200 flex items-center justify-center text-[#ff5500] font-mono font-bold text-xs">
+                <div className="h-10 w-10 rounded-xl bg-tox-orange/10 border border-tox-orange/20 flex items-center justify-center text-tox-orange font-mono font-bold text-xs">
                   @
                 </div>
                 <div>
-                  <div className="text-xs font-bold font-mono text-zinc-950 group-hover:text-[#ff5500] transition-colors">
+                  <div className="text-xs font-semibold font-mono text-white group-hover:text-tox-orange transition-colors">
                     {inf.instagram_handle}
                   </div>
-                  <div className="text-[11px] text-zinc-500">
+                  <div className="text-[11px] text-zinc-400">
                     {inf.city ? `${inf.city}, ${inf.state || ''}` : 'Location unassigned'}
                   </div>
                 </div>
               </div>
 
-              <ArrowRight className="h-4 w-4 text-zinc-400 group-hover:text-[#ff5500] group-hover:translate-x-0.5 transition-all" />
+              <ArrowRight className="h-4 w-4 text-zinc-500 group-hover:text-tox-orange group-hover:translate-x-0.5 transition-all" />
             </div>
           ))}
         </div>

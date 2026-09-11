@@ -125,16 +125,16 @@ export default function TeamPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-[11px] font-bold mb-2">
-            <Users className="h-3 w-3" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-tox-orange/30 bg-tox-orange/10 text-tox-orange text-xs font-mono font-medium mb-3 backdrop-blur-md">
+            <Users className="h-3.5 w-3.5 text-tox-orange" />
             <span>Staff Permissions</span>
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-zinc-950 flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5">
             Team Roster & Account Access Control
           </h1>
-          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
+          <p className="text-xs text-zinc-400 mt-1.5 max-w-xl leading-relaxed">
             Manage staff credentials, multi-account permissions, roles (Admin / Manager / Staff), and individual outreach volume.
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function TeamPage() {
               setAssignedAccountIds([]);
               setIsInviteOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white font-bold text-xs shadow-tox-orange transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black font-semibold text-xs shadow-tox-orange transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange cursor-pointer"
           >
             <Plus className="h-4 w-4" />
             <span>Add Team Member</span>
@@ -157,22 +157,22 @@ export default function TeamPage() {
       </div>
 
       {/* Team Roster Table */}
-      <div className="rounded-3xl border border-zinc-200 bg-white overflow-hidden shadow-tox-lg">
+      <div className="glass-panel rounded-3xl overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse dense-table">
             <thead>
-              <tr className="border-b border-zinc-100 bg-zinc-50">
-                <th className="py-3.5 px-6 font-bold text-zinc-500">Employee</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Role</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Assigned Accounts</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Total Outreach</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Unique Influencers</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Repeat Outreach</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Estimated Active Days</th>
-                <th className="py-3.5 px-6 font-bold text-zinc-500 text-right">Actions</th>
+              <tr className="border-b border-white/[0.08] bg-obsidian-950/60 font-mono text-xs text-zinc-400 font-medium">
+                <th className="py-3.5 px-6">Employee</th>
+                <th className="py-3.5 px-4">Role</th>
+                <th className="py-3.5 px-4">Assigned Accounts</th>
+                <th className="py-3.5 px-4">Total Outreach</th>
+                <th className="py-3.5 px-4">Unique Influencers</th>
+                <th className="py-3.5 px-4">Repeat Outreach</th>
+                <th className="py-3.5 px-4">Estimated Active Days</th>
+                <th className="py-3.5 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100 font-sans">
+            <tbody className="divide-y divide-white/[0.04] font-sans">
               {employees.map((emp) => {
                 const empOutreach = outreachRecords.filter((o) => o.employee_id === emp.id);
                 const uniqueInfs = new Set(empOutreach.map((o) => o.influencer_id));
@@ -185,10 +185,10 @@ export default function TeamPage() {
                   .filter(Boolean);
 
                 return (
-                  <tr key={emp.id} className="hover:bg-zinc-50/80 transition-colors">
+                  <tr key={emp.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="py-3.5 px-6">
                       <div>
-                        <div className="font-bold text-zinc-950 flex items-center gap-2">
+                        <div className="font-semibold text-white flex items-center gap-2">
                           <span>{emp.full_name}</span>
                           {emp.id === currentUser?.id && (
                             <Badge variant="primary" size="xs">
@@ -210,7 +210,7 @@ export default function TeamPage() {
                             : 'info'
                         }
                         size="xs"
-                        className="uppercase font-mono font-bold"
+                        className="uppercase font-mono font-medium"
                       >
                         {emp.role}
                       </Badge>
@@ -218,7 +218,7 @@ export default function TeamPage() {
 
                     <td className="py-3.5 px-4">
                       {emp.role === 'admin' || emp.role === 'manager' ? (
-                        <span className="text-zinc-800 font-bold text-xs">
+                        <span className="text-zinc-300 font-medium text-xs font-mono">
                           All Accounts ({accounts.length})
                         </span>
                       ) : (
@@ -230,17 +230,17 @@ export default function TeamPage() {
                               </Badge>
                             ))
                           ) : (
-                            <span className="text-rose-600 font-medium text-xs">No accounts assigned</span>
+                            <span className="text-rose-400 font-medium text-xs font-mono">No accounts assigned</span>
                           )}
                         </div>
                       )}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-zinc-900">
+                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-white">
                       {empOutreach.length}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-blue-600">
+                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-blue-400">
                       {uniqueInfs.size}
                     </td>
 
@@ -250,11 +250,11 @@ export default function TeamPage() {
                           <RotateCcw className="h-2.5 w-2.5" /> {repeats.length}
                         </Badge>
                       ) : (
-                        <span className="text-zinc-400 font-medium">0</span>
+                        <span className="text-zinc-600 font-mono">0</span>
                       )}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono text-xs text-zinc-600">
+                    <td className="py-3.5 px-4 font-mono text-xs text-zinc-400">
                       {empOutreach.length > 0 ? Math.ceil(empOutreach.length / 5) : 0} days
                     </td>
 
@@ -262,7 +262,7 @@ export default function TeamPage() {
                       {currentUser?.role === 'admin' && (
                         <button
                           onClick={() => openEditModal(emp)}
-                          className="text-xs text-[#ff5500] hover:text-[#e04a00] font-bold hover:underline underline-offset-2 transition-colors"
+                          className="text-xs text-tox-orange hover:text-tox-orange-hover font-semibold hover:underline underline-offset-2 transition-colors cursor-pointer"
                         >
                           Edit Access
                         </button>
@@ -287,7 +287,7 @@ export default function TeamPage() {
         >
           <form onSubmit={handleSaveAssignments} className="space-y-5">
             <div>
-              <label className="text-xs font-bold text-zinc-900 block mb-1">
+              <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
                 Authorization Role
               </label>
               <select
@@ -295,40 +295,40 @@ export default function TeamPage() {
                 onChange={(e) =>
                   setEditingEmployee({ ...editingEmployee, role: e.target.value })
                 }
-                className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 font-bold focus:outline-none focus:border-[#ff5500]"
+                className="w-full bg-obsidian-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white font-medium focus:outline-none focus:border-tox-orange"
               >
-                <option value="staff">Staff (Outreach logger, assigned accounts only)</option>
-                <option value="manager">Manager (All accounts, analytics, staff assignments)</option>
-                <option value="admin">Admin (Full system authority & configuration)</option>
+                <option value="staff" className="bg-obsidian-950 text-white">Staff (Outreach logger, assigned accounts only)</option>
+                <option value="manager" className="bg-obsidian-950 text-white">Manager (All accounts, analytics, staff assignments)</option>
+                <option value="admin" className="bg-obsidian-950 text-white">Admin (Full system authority & configuration)</option>
               </select>
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-zinc-900 flex items-center justify-between">
+              <label className="text-xs font-semibold text-zinc-300 flex items-center justify-between">
                 <span>Assigned Marketing Accounts</span>
-                <span className="text-[11px] font-normal text-zinc-500">
+                <span className="text-[11px] font-normal text-zinc-500 font-mono">
                   {editingEmployee.role !== 'staff'
                     ? 'Admins & Managers automatically have access to all accounts'
                     : `${assignedAccountIds.length} accounts selected`}
                 </span>
               </label>
 
-              <div className="max-h-52 overflow-y-auto rounded-2xl border border-zinc-200 bg-zinc-50 divide-y divide-zinc-100 p-2 space-y-1">
+              <div className="max-h-52 overflow-y-auto rounded-2xl border border-white/10 bg-obsidian-900/60 divide-y divide-white/[0.04] p-2 space-y-1">
                 {accounts.map((acc) => {
                   const isChecked = assignedAccountIds.includes(acc.id);
                   return (
                     <label
                       key={acc.id}
-                      className="flex items-center justify-between p-2 rounded-xl hover:bg-white cursor-pointer text-xs transition-colors"
+                      className="flex items-center justify-between p-2 rounded-xl hover:bg-white/[0.04] cursor-pointer text-xs transition-colors"
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5">
                         <input
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleAccountSelection(acc.id)}
-                          className="rounded border-zinc-300 text-[#ff5500] focus:ring-[#ff5500]"
+                          className="rounded border-white/20 bg-obsidian-950 text-tox-orange focus:ring-tox-orange accent-tox-orange cursor-pointer"
                         />
-                        <span className="font-bold text-zinc-900">{acc.account_name}</span>
+                        <span className="font-semibold text-white">{acc.account_name}</span>
                         <span className="font-mono text-zinc-500 text-[11px]">@{acc.instagram_handle}</span>
                       </div>
                     </label>
@@ -337,17 +337,17 @@ export default function TeamPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
               <button
                 type="button"
                 onClick={() => setEditingEmployee(null)}
-                className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-xs font-bold text-zinc-700 hover:bg-zinc-50 transition-colors"
+                className="px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] text-xs font-semibold text-zinc-300 hover:bg-white/[0.08] hover:text-white transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all"
+                className="px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all cursor-pointer"
               >
                 Save Changes
               </button>
@@ -366,61 +366,61 @@ export default function TeamPage() {
       >
         <form onSubmit={handleCreateEmployee} className="space-y-4">
           <div>
-            <label className="text-xs font-bold text-zinc-900 block mb-1">Full Name</label>
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">Full Name</label>
             <input
               type="text"
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="e.g. Rachel Green"
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500]"
+              className="w-full bg-obsidian-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-tox-orange"
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold text-zinc-900 block mb-1">Email Address</label>
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">Email Address</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="rachel@thetoxtechnique.com"
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500] font-mono"
+              className="w-full bg-obsidian-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-tox-orange font-mono"
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold text-zinc-900 block mb-1">System Role</label>
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">System Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500]"
+              className="w-full bg-obsidian-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-tox-orange"
             >
-              <option value="staff">Staff (Outreach logger)</option>
-              <option value="manager">Manager (Team oversight & analytics)</option>
-              <option value="admin">Admin (Full administrative control)</option>
+              <option value="staff" className="bg-obsidian-950 text-white">Staff (Outreach logger)</option>
+              <option value="manager" className="bg-obsidian-950 text-white">Manager (Team oversight & analytics)</option>
+              <option value="admin" className="bg-obsidian-950 text-white">Admin (Full administrative control)</option>
             </select>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-900 block">
+            <label className="text-xs font-semibold text-zinc-300 block">
               Assign Marketing Accounts (~10 recommended)
             </label>
-            <div className="max-h-40 overflow-y-auto rounded-2xl border border-zinc-200 bg-zinc-50 p-2 space-y-1">
+            <div className="max-h-40 overflow-y-auto rounded-2xl border border-white/10 bg-obsidian-900/60 p-2 space-y-1">
               {accounts.map((acc) => {
                 const isChecked = assignedAccountIds.includes(acc.id);
                 return (
                   <label
                     key={acc.id}
-                    className="flex items-center gap-2 p-2 rounded-xl hover:bg-white cursor-pointer text-xs transition-colors"
+                    className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-white/[0.04] cursor-pointer text-xs transition-colors"
                   >
                     <input
                       type="checkbox"
                       checked={isChecked}
                       onChange={() => toggleAccountSelection(acc.id)}
-                      className="rounded border-zinc-300 text-[#ff5500] focus:ring-[#ff5500]"
+                      className="rounded border-white/20 bg-obsidian-950 text-tox-orange focus:ring-tox-orange accent-tox-orange cursor-pointer"
                     />
-                    <span className="font-bold text-zinc-900">{acc.account_name}</span>
+                    <span className="font-semibold text-white">{acc.account_name}</span>
                     <span className="font-mono text-zinc-500 text-[10px]">@{acc.instagram_handle}</span>
                   </label>
                 );
@@ -428,17 +428,17 @@ export default function TeamPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
             <button
               type="button"
               onClick={() => setIsInviteOpen(false)}
-              className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-xs font-bold text-zinc-700 hover:bg-zinc-50 transition-colors"
+              className="px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] text-xs font-semibold text-zinc-300 hover:bg-white/[0.08] hover:text-white transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all"
+              className="px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all cursor-pointer"
             >
               Add Member
             </button>

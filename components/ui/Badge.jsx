@@ -3,30 +3,30 @@ import { cn } from '@/lib/utils.js';
 
 export function Badge({ children, variant = 'default', size = 'sm', className }) {
   const variantStyles = {
-    default: 'bg-slate-100 text-slate-700 border-slate-200',
-    primary: 'bg-orange-50 text-[#ff5500] border-orange-200 font-semibold',
-    orange: 'bg-orange-500 text-white border-orange-600 font-bold shadow-sm',
-    success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    warning: 'bg-amber-50 text-amber-800 border-amber-200',
-    danger: 'bg-rose-50 text-rose-700 border-rose-200',
-    info: 'bg-sky-50 text-sky-700 border-sky-200',
-    purple: 'bg-purple-50 text-purple-700 border-purple-200',
-    repeat: 'bg-orange-100 text-orange-900 border-orange-300 font-bold',
-    cross: 'bg-blue-50 text-blue-700 border-blue-200',
-    black: 'bg-zinc-950 text-white border-zinc-900',
-    historical: 'bg-slate-100 text-slate-500 border-slate-200 text-[11px] italic',
+    default: 'bg-white/[0.06] text-zinc-300 border-white/[0.1]',
+    primary: 'bg-[#ff5500]/15 text-[#ff5500] border-[#ff5500]/30 font-semibold',
+    orange: 'bg-[#ff5500] text-white border-[#ff5500] font-bold shadow-tox-orange',
+    success: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+    warning: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+    danger: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
+    info: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+    purple: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+    repeat: 'bg-[#ff5500]/20 text-[#ff6a1a] border-[#ff5500]/40 font-bold',
+    cross: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
+    black: 'bg-white/[0.1] text-white border-white/[0.2]',
+    historical: 'bg-white/[0.04] text-zinc-500 border-white/[0.06] text-[11px] italic',
   };
 
   const sizeStyles = {
     xs: 'px-1.5 py-0.5 text-[10px]',
-    sm: 'px-2.5 py-0.5 text-xs',
+    sm: 'px-2 py-0.5 text-xs',
     md: 'px-3 py-1 text-xs',
   };
 
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-md border font-medium transition-colors shadow-2xs',
+        'inline-flex items-center gap-1 rounded-full border font-medium transition-colors shadow-8k',
         variantStyles[variant] || variantStyles.default,
         sizeStyles[size] || sizeStyles.sm,
         className

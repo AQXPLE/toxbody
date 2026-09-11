@@ -149,22 +149,22 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
       {/* Dark overlay */}
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
 
       {/* Main Instagram In-App Window */}
-      <div className="relative w-full max-w-3xl bg-white rounded-3xl border border-zinc-200 shadow-2xl overflow-hidden flex flex-col max-h-[92vh] z-10 animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-3xl bg-obsidian-950 rounded-3xl border border-white/10 shadow-2xl shadow-black overflow-hidden flex flex-col max-h-[92vh] z-10 animate-in zoom-in-95 duration-200 text-zinc-200">
         {/* Instagram In-App Navigation Bar */}
-        <div className="px-6 py-3.5 border-b border-zinc-200 flex items-center justify-between bg-white select-none">
+        <div className="px-6 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02] select-none">
           <div className="flex items-center gap-2.5">
             <div className="h-7 w-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-xs">
               <Instagram className="h-4 w-4" />
             </div>
-            <span className="font-black text-sm text-zinc-950 tracking-tight font-sans">
+            <span className="font-semibold text-sm text-white tracking-tight font-sans">
               Instagram Live In-App Profile
             </span>
             {profileData?.isLive ? (
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 Live Meta Data
               </span>
             ) : (
@@ -177,33 +177,34 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
           <div className="flex items-center gap-2">
             <button
               onClick={openPocketBrowser}
-              className="px-2.5 py-1 rounded-lg border border-orange-200 bg-orange-50 hover:bg-orange-100 text-[#ff5500] text-xs font-bold flex items-center gap-1.5 transition-colors shadow-2xs"
+              className="px-2.5 py-1 rounded-lg border border-tox-orange/30 bg-tox-orange/10 hover:bg-tox-orange/20 text-tox-orange text-xs font-medium flex items-center gap-1.5 transition-colors shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
               title="Launch dedicated Pocket Browser mobile window to browse all posts and videos freely"
             >
-              <Sparkles className="h-3 w-3 text-[#ff5500]" />
+              <Sparkles className="h-3 w-3 text-tox-orange" />
               <span className="hidden sm:inline">Pocket Browser</span>
               <span className="sm:hidden">Pocket</span>
             </button>
             <button
               onClick={handleCopyHandle}
-              className="px-2.5 py-1 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-bold flex items-center gap-1.5 transition-colors"
+              className="px-2.5 py-1 rounded-lg border border-white/10 hover:bg-white/[0.06] text-zinc-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
             >
-              <Copy className="h-3 w-3 text-[#ff5500]" />
+              <Copy className="h-3 w-3 text-tox-orange" />
               <span>Copy</span>
             </button>
             <a
               href={profileData?.instagramUrl || `https://www.instagram.com/${handle}/`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-2.5 py-1 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 text-xs font-bold flex items-center gap-1.5 transition-colors"
+              className="px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] text-zinc-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
               title="Open Official Instagram Page in New Tab"
             >
-              <ExternalLink className="h-3.5 w-3.5 text-zinc-500" />
+              <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
               <span className="hidden sm:inline">Open on Instagram</span>
             </a>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors ml-1"
+              aria-label="Close modal"
+              className="p-1.5 rounded-lg text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-colors ml-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
             >
               <X className="h-5 w-5" />
             </button>
@@ -212,18 +213,18 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
 
         {loading ? (
           <div className="py-24 text-center space-y-3">
-            <div className="h-8 w-8 rounded-full border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto" />
-            <p className="text-xs text-zinc-700 font-bold">Connecting to Instagram Meta servers for live data...</p>
+            <div className="h-8 w-8 rounded-full border-2 border-tox-orange border-t-transparent animate-spin mx-auto" />
+            <p className="text-xs text-zinc-200 font-semibold">Connecting to Instagram Meta servers for live data...</p>
             <p className="text-[11px] text-zinc-400 font-mono">Resolving followers, bio, verified status & recent posts</p>
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto">
             {/* Profile Header */}
-            <div className="p-6 md:p-8 space-y-6 bg-white border-b border-zinc-100">
+            <div className="p-6 md:p-8 space-y-6 bg-transparent border-b border-white/[0.08]">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 {/* Real Avatar with Instagram Story Ring */}
-                <div className="p-1 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0">
-                  <div className="p-0.5 bg-white rounded-full">
+                <div className="p-0.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0">
+                  <div className="p-0.5 bg-obsidian-950 rounded-full">
                     {profileData.avatarUrl ? (
                       <img
                         src={imageErrorMap['avatar'] || profileData.avatarUrl}
@@ -233,7 +234,7 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                         className="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover shadow-inner"
                       />
                     ) : (
-                      <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-orange-400 to-[#ff5500] text-white flex items-center justify-center font-black text-3xl font-mono">
+                      <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-orange-400 to-tox-orange text-black flex items-center justify-center font-bold text-3xl font-mono">
                         @
                       </div>
                     )}
@@ -244,18 +245,18 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                 <div className="flex-1 text-center sm:text-left space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
                     <div className="flex items-center justify-center sm:justify-start gap-2">
-                      <h2 className="text-xl font-black font-mono text-zinc-950">
+                      <h2 className="text-xl font-bold font-mono text-white tracking-tight">
                         {profileData.formattedHandle}
                       </h2>
                       {profileData.verified && (
-                        <CheckCircle2 className="h-4 w-4 text-sky-500 fill-sky-500" title="Verified Creator" />
+                        <CheckCircle2 className="h-4 w-4 text-sky-400 fill-sky-400" title="Verified Creator" />
                       )}
                     </div>
 
                     <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={handleAddToToxAndLog}
-                        className="px-5 py-2 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all flex items-center gap-1.5"
+                        className="px-5 py-2 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange"
                       >
                         <Send className="h-3.5 w-3.5" />
                         <span>Log Outreach</span>
@@ -264,40 +265,40 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                   </div>
 
                   {/* Real Live Followers Counts */}
-                  <div className="flex items-center justify-center sm:justify-start gap-6 text-xs text-zinc-800">
+                  <div className="flex items-center justify-center sm:justify-start gap-6 text-xs text-zinc-300">
                     <div>
-                      <span className="font-black text-zinc-950 font-mono text-sm">
+                      <span className="font-bold text-white font-mono text-sm tabular-nums">
                         {profileData.postCount}
                       </span>{' '}
-                      <span className="text-zinc-500 font-medium">posts</span>
+                      <span className="text-zinc-400 font-normal">posts</span>
                     </div>
                     <div>
-                      <span className="font-black text-zinc-950 font-mono text-sm">
+                      <span className="font-bold text-white font-mono text-sm tabular-nums">
                         {profileData.followerCount}
                       </span>{' '}
-                      <span className="text-zinc-500 font-medium">followers</span>
+                      <span className="text-zinc-400 font-normal">followers</span>
                     </div>
                     <div>
-                      <span className="font-black text-zinc-950 font-mono text-sm">
+                      <span className="font-bold text-white font-mono text-sm tabular-nums">
                         {profileData.followingCount}
                       </span>{' '}
-                      <span className="text-zinc-500 font-medium">following</span>
+                      <span className="text-zinc-400 font-normal">following</span>
                     </div>
                   </div>
 
                   {/* Real Display Name & Bio */}
                   <div className="space-y-1 pt-1">
-                    <div className="font-bold text-sm text-zinc-950">
+                    <div className="font-semibold text-sm text-white">
                       {profileData.displayName}
                     </div>
-                    <p className="text-xs text-zinc-700 whitespace-pre-line leading-relaxed font-sans">
+                    <p className="text-xs text-zinc-300 whitespace-pre-line leading-relaxed font-sans">
                       {profileData.bio}
                     </p>
                     <a
                       href={profileData.instagramUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] text-[#ff5500] hover:underline font-bold pt-0.5"
+                      className="inline-flex items-center gap-1 text-[11px] text-tox-orange hover:underline font-medium pt-0.5"
                     >
                       <Globe className="h-3 w-3" />
                       <span>instagram.com/{profileData.username}</span>
@@ -307,13 +308,13 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
               </div>
 
               {/* Integrated Tox Technique Intelligence Box */}
-              <div className="rounded-2xl border border-orange-200 bg-gradient-to-r from-orange-50/90 via-white to-orange-50/50 p-4 space-y-3 shadow-xs">
+              <div className="rounded-2xl border border-tox-orange/20 bg-tox-orange/[0.03] p-4 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-lg bg-[#ff5500] text-white flex items-center justify-center text-xs font-black shadow-xs">
+                    <div className="h-6 w-6 rounded-lg bg-tox-orange text-black flex items-center justify-center text-xs font-bold shadow-xs">
                       T
                     </div>
-                    <span className="text-xs font-black text-zinc-950 font-mono">
+                    <span className="text-xs font-semibold text-white font-mono">
                       The Tox Technique Dossier
                     </span>
                   </div>
@@ -332,35 +333,35 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                 {internalData.exists ? (
                   <div className="space-y-2.5">
                     <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                      <div className="p-2.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
-                        <span className="text-[10px] text-zinc-500 uppercase font-bold block">Total Touches</span>
-                        <span className="font-black font-mono text-zinc-950 text-sm">
+                      <div className="p-2.5 rounded-xl bg-obsidian-900/90 border border-white/[0.06] shadow-xs">
+                        <span className="text-[10px] text-zinc-400 uppercase font-mono block">Total Touches</span>
+                        <span className="font-bold font-mono text-white text-sm tabular-nums">
                           {internalData.outreachHistory.length}
                         </span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
-                        <span className="text-[10px] text-zinc-500 uppercase font-bold block">Accounts</span>
-                        <span className="font-black font-mono text-blue-600 text-sm">
+                      <div className="p-2.5 rounded-xl bg-obsidian-900/90 border border-white/[0.06] shadow-xs">
+                        <span className="text-[10px] text-zinc-400 uppercase font-mono block">Accounts</span>
+                        <span className="font-bold font-mono text-sky-400 text-sm tabular-nums">
                           {new Set(internalData.outreachHistory.map((o) => o.account_id)).size}
                         </span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
-                        <span className="text-[10px] text-zinc-500 uppercase font-bold block">Repeats</span>
-                        <span className="font-black font-mono text-[#ff5500] text-sm">
+                      <div className="p-2.5 rounded-xl bg-obsidian-900/90 border border-white/[0.06] shadow-xs">
+                        <span className="text-[10px] text-zinc-400 uppercase font-mono block">Repeats</span>
+                        <span className="font-bold font-mono text-tox-orange text-sm tabular-nums">
                           {internalData.outreachHistory.filter((o) => o.is_repeat_same_account).length}
                         </span>
                       </div>
                     </div>
 
                     {internalData.outreachHistory.length > 0 && (
-                      <div className="text-xs text-zinc-700 bg-white p-3 rounded-xl border border-zinc-200 space-y-1.5 shadow-2xs">
-                        <div className="font-bold text-zinc-900 text-[11px]">Past Outreach Timeline:</div>
+                      <div className="text-xs text-zinc-300 bg-obsidian-900/90 p-3 rounded-xl border border-white/[0.06] space-y-1.5 shadow-xs">
+                        <div className="font-semibold text-white text-[11px]">Past Outreach Timeline:</div>
                         {internalData.outreachHistory.slice(0, 3).map((o) => {
                           const acc = accounts.find((a) => a.id === o.account_id);
                           return (
                             <div key={o.id} className="flex items-center justify-between text-[11px]">
-                              <span>Account: <strong className="text-zinc-900">{acc?.account_name || 'Marketing Account'}</strong></span>
-                              <span className="font-mono text-zinc-500 font-medium">
+                              <span>Account: <strong className="text-zinc-200">{acc?.account_name || 'Marketing Account'}</strong></span>
+                              <span className="font-mono text-zinc-400 tabular-nums">
                                 {o.outreach_date ? formatOutreachDate(o.outreach_date) : 'Historical'}
                               </span>
                             </div>
@@ -371,12 +372,12 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                   </div>
                 ) : (
                   <div className="flex items-center justify-between pt-1">
-                    <p className="text-xs text-zinc-600 font-medium">
+                    <p className="text-xs text-zinc-400 font-medium">
                       This creator has not been contacted yet by any of your marketing accounts.
                     </p>
                     <button
                       onClick={handleAddToToxAndLog}
-                      className="px-3.5 py-1.5 rounded-xl bg-zinc-950 hover:bg-black text-white text-xs font-bold transition-all shadow-xs"
+                      className="px-3.5 py-1.5 rounded-xl bg-white/[0.08] hover:bg-tox-orange hover:text-black text-white text-xs font-semibold transition-all shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
                     >
                       + Add & Log
                     </button>
@@ -386,13 +387,13 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
             </div>
 
             {/* Posts Grid Header Tabs */}
-            <div className="flex border-b border-zinc-200 text-xs font-bold font-mono text-zinc-500 uppercase tracking-wider justify-center gap-8 bg-slate-50/50">
+            <div className="flex border-b border-white/[0.08] text-xs font-mono text-zinc-400 uppercase tracking-wider justify-center gap-8 bg-white/[0.02]">
               <button
                 onClick={() => setActiveTab('POSTS')}
                 className={`py-3.5 flex items-center gap-1.5 border-b-2 transition-colors ${
                   activeTab === 'POSTS'
-                    ? 'border-[#ff5500] text-[#ff5500]'
-                    : 'border-transparent hover:text-zinc-900'
+                    ? 'border-tox-orange text-tox-orange'
+                    : 'border-transparent hover:text-zinc-200'
                 }`}
               >
                 <Layers className="h-3.5 w-3.5" />
@@ -408,7 +409,7 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                     <div
                       key={post.id || idx}
                       onClick={() => setSelectedPost(post)}
-                      className="relative group aspect-square rounded-2xl overflow-hidden bg-zinc-100 cursor-pointer border border-zinc-200 block shadow-xs"
+                      className="relative group aspect-square rounded-2xl overflow-hidden bg-obsidian-900 cursor-pointer border border-white/[0.08] block shadow-xs"
                     >
                       <img
                         src={imageErrorMap[post.id] || post.imageUrl}
@@ -419,35 +420,35 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                       />
 
                       {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 text-white font-bold text-xs font-mono p-2 text-center">
+                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 text-white font-medium text-xs font-mono p-2 text-center">
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-1">
-                            <Heart className="h-4 w-4 fill-white" />
-                            <span>{post.likes}</span>
+                            <Heart className="h-4 w-4 fill-rose-500 text-rose-500" />
+                            <span className="tabular-nums">{post.likes}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <MessageCircle className="h-4 w-4 fill-white" />
-                            <span>{post.comments}</span>
+                            <span className="tabular-nums">{post.comments}</span>
                           </div>
                         </div>
-                        <span className="text-[10px] text-orange-400 font-bold">Review Post & Video ⚡</span>
+                        <span className="text-[10px] text-tox-orange font-semibold">Review Post & Video ⚡</span>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="py-12 text-center space-y-3">
-                  <Instagram className="h-10 w-10 text-zinc-400 mx-auto" />
-                  <div className="text-sm font-bold text-zinc-800">
+                  <Instagram className="h-10 w-10 text-zinc-600 mx-auto" />
+                  <div className="text-sm font-semibold text-white">
                     {profileData.displayName}'s Profile ({profileData.formattedHandle})
                   </div>
-                  <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                  <p className="text-xs text-zinc-400 max-w-sm mx-auto">
                     Open the live Instagram page or launch the Pocket Browser to view all {profileData.postCount} photos, videos, and stories.
                   </p>
                   <div className="flex items-center justify-center gap-3 pt-2">
                     <button
                       onClick={openPocketBrowser}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold transition-all shadow-tox-orange"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold transition-all shadow-tox-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange"
                     >
                       <Sparkles className="h-3.5 w-3.5" />
                       <span>Launch Pocket Browser</span>
@@ -456,7 +457,7 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                       href={profileData.instagramUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-bold transition-all shadow-md"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white text-xs font-semibold transition-all border border-white/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                       <span>Open Official Feed</span>
@@ -471,23 +472,24 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
 
       {/* Interactive Post & Video Reviewer Modal */}
       {selectedPost && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl border border-zinc-200 flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg bg-obsidian-950 rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex flex-col max-h-[90vh] text-zinc-200">
             {/* Modal Top Bar */}
-            <div className="px-5 py-3.5 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/70">
+            <div className="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
               <div className="flex items-center gap-2">
-                <div className="h-6 w-6 rounded-lg bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white text-xs font-black">
+                <div className="h-6 w-6 rounded-lg bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white text-xs font-bold">
                   <Instagram className="h-3.5 w-3.5" />
                 </div>
                 <div>
-                  <span className="font-bold text-xs text-zinc-950 font-mono">
+                  <span className="font-semibold text-xs text-white font-mono">
                     {profileData.formattedHandle} Post Review
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedPost(null)}
-                className="p-1 rounded-lg text-zinc-400 hover:bg-zinc-200/60 hover:text-zinc-700 transition-colors"
+                aria-label="Close review"
+                className="p-1 rounded-lg text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -502,25 +504,25 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                 alt="Post inspection"
                 className="max-h-full max-w-full object-contain"
               />
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded-xl bg-black/60 backdrop-blur-xs text-white text-xs font-mono font-bold">
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded-xl bg-obsidian-950/80 backdrop-blur-md text-white text-xs font-mono font-semibold border border-white/10">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1 text-rose-400">
                     <Heart className="h-3.5 w-3.5 fill-rose-400" />
-                    {selectedPost.likes} Likes
+                    <span className="tabular-nums">{selectedPost.likes}</span> Likes
                   </span>
                   <span className="flex items-center gap-1 text-zinc-300">
                     <MessageCircle className="h-3.5 w-3.5" />
-                    {selectedPost.comments} Comments
+                    <span className="tabular-nums">{selectedPost.comments}</span> Comments
                   </span>
                 </div>
-                <span className="text-[10px] text-zinc-300">Live Post Media</span>
+                <span className="text-[10px] text-zinc-400">Live Post Media</span>
               </div>
             </div>
 
             {/* Evaluation & Action Bar */}
-            <div className="p-5 space-y-4 bg-white overflow-y-auto">
+            <div className="p-5 space-y-4 bg-obsidian-950 overflow-y-auto">
               <div className="space-y-2">
-                <div className="text-[11px] uppercase font-bold text-zinc-500 font-mono flex items-center justify-between">
+                <div className="text-[11px] uppercase font-mono text-zinc-400 flex items-center justify-between">
                   <span>Outreach Fit Assessment</span>
                   {reviewTag && (
                     <Badge variant="orange" size="xs">
@@ -534,10 +536,10 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                       setReviewTag('Top Aesthetic Fit');
                       addToast({ title: 'Tag Saved', message: 'Marked as Top Aesthetic Fit for Tox Body campaigns', type: 'success' });
                     }}
-                    className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange ${
                       reviewTag === 'Top Aesthetic Fit'
-                        ? 'bg-orange-50 border-[#ff5500] text-[#ff5500]'
-                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100'
+                        ? 'bg-tox-orange/15 border-tox-orange text-tox-orange'
+                        : 'bg-white/[0.03] border-white/10 text-zinc-300 hover:bg-white/[0.06]'
                     }`}
                   >
                     🔥 Top Aesthetic Fit
@@ -547,10 +549,10 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                       setReviewTag('High Engagement');
                       addToast({ title: 'Tag Saved', message: 'Marked as High Engagement content', type: 'success' });
                     }}
-                    className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange ${
                       reviewTag === 'High Engagement'
-                        ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
-                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100'
+                        ? 'bg-emerald-500/15 border-emerald-500 text-emerald-400'
+                        : 'bg-white/[0.03] border-white/10 text-zinc-300 hover:bg-white/[0.06]'
                     }`}
                   >
                     📈 High Engagement
@@ -560,10 +562,10 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                       setReviewTag('Keep On Radar');
                       addToast({ title: 'Tag Saved', message: 'Marked to Keep on Radar', type: 'info' });
                     }}
-                    className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange ${
                       reviewTag === 'Keep On Radar'
-                        ? 'bg-blue-50 border-blue-500 text-blue-700'
-                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100'
+                        ? 'bg-sky-500/15 border-sky-500 text-sky-400'
+                        : 'bg-white/[0.03] border-white/10 text-zinc-300 hover:bg-white/[0.06]'
                     }`}
                   >
                     👀 Keep on Radar
@@ -572,13 +574,13 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-2 pt-2 border-t border-zinc-100">
+              <div className="flex flex-col sm:flex-row items-center gap-2 pt-2 border-t border-white/[0.08]">
                 <button
                   onClick={() => {
                     handleAddToToxAndLog();
                     setSelectedPost(null);
                   }}
-                  className="w-full sm:flex-1 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:flex-1 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange"
                 >
                   <Send className="h-3.5 w-3.5" />
                   <span>Log Outreach for This Creator</span>
@@ -588,7 +590,7 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                     openPocketBrowser();
                     setSelectedPost(null);
                   }}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 text-[#ff5500] text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-tox-orange/30 bg-tox-orange/10 hover:bg-tox-orange/20 text-tox-orange text-xs font-medium transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
                   title="Open in Pocket Browser window to watch full video"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
@@ -598,7 +600,7 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                   href={selectedPost.url || profileData.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 hover:text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
                   <span>Instagram</span>

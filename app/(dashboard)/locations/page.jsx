@@ -64,23 +64,23 @@ export default function LocationsPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-[11px] font-bold mb-2">
-            <MapPin className="h-3 w-3" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-tox-orange/30 bg-tox-orange/10 text-tox-orange text-xs font-mono font-medium mb-3 backdrop-blur-md">
+            <MapPin className="h-3.5 w-3.5 text-tox-orange" />
             <span>Target Markets</span>
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-zinc-950 flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5">
             Operating Geographic Locations
           </h1>
-          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
+          <p className="text-xs text-zinc-400 mt-1.5 max-w-xl leading-relaxed">
             Regions, cities, and markets where The Tox Technique operates local marketing accounts and influencer partnerships.
           </p>
         </div>
 
         <button
           onClick={() => setIsCreateOpen(true)}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white font-bold text-xs shadow-tox-orange transition-all"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black font-semibold text-xs shadow-tox-orange transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           <span>Add Location</span>
@@ -96,16 +96,18 @@ export default function LocationsPage() {
           return (
             <div
               key={loc.id}
-              className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-4 hover:border-zinc-300 transition-all shadow-tox-lg"
+              className="glass-panel rounded-3xl p-6 space-y-4 hover:border-white/20 transition-all shadow-xl group"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#ff5500] shadow-xs">
+                  <div className="h-11 w-11 rounded-2xl bg-tox-orange/10 border border-tox-orange/20 flex items-center justify-center text-tox-orange shadow-inner">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-zinc-950">{loc.name}</h3>
-                    <div className="text-xs text-zinc-500 font-medium">
+                    <h3 className="text-sm font-bold text-white group-hover:text-tox-orange transition-colors">
+                      {loc.name}
+                    </h3>
+                    <div className="text-xs text-zinc-400 font-medium">
                       {loc.city}, {loc.state} • {loc.country || 'USA'}
                     </div>
                   </div>
@@ -115,31 +117,34 @@ export default function LocationsPage() {
                 </Badge>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-zinc-100 text-xs">
-                <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-100">
-                  <div className="text-[10px] uppercase font-bold text-zinc-500 flex items-center gap-1">
-                    <Instagram className="h-3 w-3 text-[#ff5500]" /> Accounts
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/[0.06] text-xs">
+                <div className="p-3 rounded-2xl bg-obsidian-900/80 border border-white/[0.06]">
+                  <div className="text-[10px] uppercase font-mono font-medium text-zinc-400 flex items-center gap-1.5">
+                    <Instagram className="h-3 w-3 text-tox-orange" /> Accounts
                   </div>
-                  <div className="font-mono font-black text-lg text-zinc-950 mt-1">
+                  <div className="font-mono font-bold text-lg text-white mt-1">
                     {linkedAccounts.length}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-100">
-                  <div className="text-[10px] uppercase font-bold text-zinc-500 flex items-center gap-1">
-                    <Users className="h-3 w-3 text-blue-600" /> Influencers
+                <div className="p-3 rounded-2xl bg-obsidian-900/80 border border-white/[0.06]">
+                  <div className="text-[10px] uppercase font-mono font-medium text-zinc-400 flex items-center gap-1.5">
+                    <Users className="h-3 w-3 text-blue-400" /> Influencers
                   </div>
-                  <div className="font-mono font-black text-lg text-zinc-950 mt-1">
+                  <div className="font-mono font-bold text-lg text-white mt-1">
                     {linkedInfluencers.length}
                   </div>
                 </div>
               </div>
 
               {linkedAccounts.length > 0 && (
-                <div className="text-[11px] text-zinc-500 flex flex-wrap gap-1.5 pt-1">
-                  <span className="font-bold text-zinc-700">Accounts:</span>
+                <div className="text-[11px] text-zinc-400 flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="font-medium text-zinc-500">Accounts:</span>
                   {linkedAccounts.map((a) => (
-                    <span key={a.id} className="text-[#ff5500] font-mono font-bold bg-orange-50 px-2 py-0.5 rounded-md border border-orange-100">
+                    <span
+                      key={a.id}
+                      className="text-tox-orange font-mono font-medium bg-tox-orange/10 px-2 py-0.5 rounded-md border border-tox-orange/20"
+                    >
                       @{a.instagram_handle}
                     </span>
                   ))}
@@ -159,7 +164,7 @@ export default function LocationsPage() {
       >
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="text-xs font-bold text-zinc-900 block mb-1">
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
               Location / Market Name (e.g. Southlake, Sugar Land, Riverton)
             </label>
             <input
@@ -168,45 +173,45 @@ export default function LocationsPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Sugar Land"
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500]"
+              className="w-full bg-obsidian-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-tox-orange"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-bold text-zinc-900 block mb-1">City</label>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1.5">City</label>
               <input
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="Sugar Land"
-                className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500]"
+                className="w-full bg-obsidian-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-tox-orange"
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-zinc-900 block mb-1">State Code</label>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1.5">State Code</label>
               <input
                 type="text"
                 maxLength={2}
                 value={state}
                 onChange={(e) => setState(e.target.value)}
                 placeholder="TX"
-                className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500] uppercase font-mono"
+                className="w-full bg-obsidian-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-tox-orange uppercase font-mono"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
             <button
               type="button"
               onClick={() => setIsCreateOpen(false)}
-              className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-xs font-bold text-zinc-700 hover:bg-zinc-50 transition-colors"
+              className="px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] text-xs font-semibold text-zinc-300 hover:bg-white/[0.08] hover:text-white transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all"
+              className="px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all cursor-pointer"
             >
               Save Location
             </button>

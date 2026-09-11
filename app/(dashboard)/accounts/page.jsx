@@ -117,24 +117,24 @@ export default function AccountsPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-[11px] font-bold mb-2">
-            <Instagram className="h-3 w-3" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-tox-orange/30 bg-tox-orange/10 text-tox-orange text-xs font-mono font-medium mb-3 backdrop-blur-md">
+            <Instagram className="h-3.5 w-3.5 text-tox-orange" />
             <span>Outreach Channels</span>
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-zinc-950 flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5">
             Instagram Marketing Accounts
           </h1>
-          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
-            Manage Instagram handles, assigned locations, staff access permissions, and account-level outreach volume.
+          <p className="text-xs text-zinc-400 mt-1.5 max-w-xl leading-relaxed">
+            Manage Instagram handles, assigned regional locations, staff access permissions, and account-level outreach volume.
           </p>
         </div>
 
         {currentUser?.role !== 'staff' && (
           <button
             onClick={() => setIsCreateOpen(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white font-bold text-xs shadow-tox-orange transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black font-semibold text-xs shadow-tox-orange transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange cursor-pointer"
           >
             <Plus className="h-4 w-4" />
             <span>Add Marketing Account</span>
@@ -142,38 +142,42 @@ export default function AccountsPage() {
         )}
       </div>
 
-      {/* Search Filter */}
+      {/* Search & Filter Bar */}
       <div className="flex items-center justify-between gap-4">
         <div className="relative w-80">
-          <Search className="h-3.5 w-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="h-3.5 w-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search account name or handle..."
-            className="w-full pl-9 pr-3.5 py-2 bg-white border border-zinc-200 rounded-xl text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] font-mono shadow-2xs"
+            className="w-full pl-9 pr-3.5 py-2.5 bg-obsidian-900/90 border border-white/10 rounded-xl text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-tox-orange focus:ring-1 focus:ring-tox-orange font-mono shadow-inner transition-colors"
           />
+        </div>
+
+        <div className="text-xs font-mono text-zinc-500">
+          Showing <span className="text-white font-bold">{filteredAccounts.length}</span> accounts
         </div>
       </div>
 
       {/* Accounts Table */}
-      <div className="rounded-3xl border border-zinc-200 bg-white overflow-hidden shadow-tox-lg">
+      <div className="glass-panel rounded-3xl overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse dense-table">
             <thead>
-              <tr className="border-b border-zinc-100 bg-zinc-50">
-                <th className="py-3.5 px-6 font-bold text-zinc-500">Account Name</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Instagram Handle</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Location</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Assigned Staff</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Total Outreach</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Unique Influencers</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Repeat Outreach</th>
-                <th className="py-3.5 px-4 font-bold text-zinc-500">Last Active</th>
-                <th className="py-3.5 px-6 font-bold text-zinc-500 text-right">Actions</th>
+              <tr className="border-b border-white/[0.08] bg-obsidian-950/60 font-mono text-xs text-zinc-400 font-medium">
+                <th className="py-3.5 px-6">Account Name</th>
+                <th className="py-3.5 px-4">Instagram Handle</th>
+                <th className="py-3.5 px-4">Location</th>
+                <th className="py-3.5 px-4">Assigned Staff</th>
+                <th className="py-3.5 px-4">Total Outreach</th>
+                <th className="py-3.5 px-4">Unique Influencers</th>
+                <th className="py-3.5 px-4">Repeat Outreach</th>
+                <th className="py-3.5 px-4">Last Active</th>
+                <th className="py-3.5 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100 font-sans">
+            <tbody className="divide-y divide-white/[0.04] font-sans">
               {filteredAccounts.map((acc) => {
                 const accOutreach = outreachRecords.filter((o) => o.account_id === acc.id);
                 const uniqueInfs = new Set(accOutreach.map((o) => o.influencer_id));
@@ -187,10 +191,10 @@ export default function AccountsPage() {
                 const loc = locationMap.get(acc.location_id);
 
                 return (
-                  <tr key={acc.id} className="hover:bg-zinc-50/80 transition-colors group">
+                  <tr key={acc.id} className="hover:bg-white/[0.02] transition-colors group">
                     <td className="py-3.5 px-6">
-                      <div className="font-bold text-zinc-950 flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center text-[#ff5500]">
+                      <div className="font-semibold text-white flex items-center gap-2.5">
+                        <div className="h-7 w-7 rounded-lg bg-tox-orange/10 border border-tox-orange/20 flex items-center justify-center text-tox-orange">
                           <Instagram className="h-3.5 w-3.5" />
                         </div>
                         <span>{acc.account_name}</span>
@@ -202,15 +206,22 @@ export default function AccountsPage() {
                         href={`https://www.instagram.com/${acc.instagram_handle}/`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-mono font-bold text-zinc-700 hover:text-[#ff5500] transition-colors flex items-center gap-1"
+                        className="font-mono font-medium text-zinc-300 hover:text-tox-orange transition-colors inline-flex items-center gap-1.5 group-hover:text-white"
                       >
-                        @{acc.instagram_handle}
-                        <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <span>@{acc.instagram_handle}</span>
+                        <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 text-tox-orange transition-opacity" />
                       </a>
                     </td>
 
-                    <td className="py-3.5 px-4 text-xs text-zinc-700 font-medium">
-                      {loc ? `${loc.name} (${loc.state})` : '—'}
+                    <td className="py-3.5 px-4 text-xs text-zinc-400 font-medium">
+                      {loc ? (
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin className="h-3 w-3 text-zinc-500" />
+                          {loc.name} <span className="text-zinc-500">({loc.state})</span>
+                        </span>
+                      ) : (
+                        <span className="text-zinc-600">—</span>
+                      )}
                     </td>
 
                     <td className="py-3.5 px-4">
@@ -222,16 +233,16 @@ export default function AccountsPage() {
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-zinc-400 text-xs font-medium">Unassigned</span>
+                          <span className="text-zinc-600 text-xs font-mono">Unassigned</span>
                         )}
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-zinc-900">
+                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-white">
                       {accOutreach.length}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-blue-600">
+                    <td className="py-3.5 px-4 font-mono font-bold text-xs text-blue-400">
                       {uniqueInfs.size}
                     </td>
 
@@ -241,11 +252,11 @@ export default function AccountsPage() {
                           <RotateCcw className="h-2.5 w-2.5" /> {repeats.length}
                         </Badge>
                       ) : (
-                        <span className="text-zinc-400 text-xs font-medium">0</span>
+                        <span className="text-zinc-600 text-xs font-mono">0</span>
                       )}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono text-xs text-zinc-600">
+                    <td className="py-3.5 px-4 font-mono text-xs text-zinc-400">
                       {latest ? (
                         latest.outreach_date ? (
                           formatShortDate(latest.outreach_date)
@@ -262,7 +273,7 @@ export default function AccountsPage() {
                     <td className="py-3.5 px-6 text-right">
                       <button
                         onClick={() => setSelectedAccountForHistory(acc)}
-                        className="text-xs text-[#ff5500] hover:text-[#e04a00] font-bold hover:underline underline-offset-2 transition-colors"
+                        className="text-xs text-tox-orange hover:text-tox-orange-hover font-semibold hover:underline underline-offset-2 transition-colors cursor-pointer"
                       >
                         View History
                       </button>
@@ -285,9 +296,9 @@ export default function AccountsPage() {
           maxWidth="max-w-3xl"
         >
           <div className="space-y-4">
-            <div className="max-h-96 overflow-y-auto divide-y divide-zinc-100">
+            <div className="max-h-96 overflow-y-auto divide-y divide-white/[0.06] pr-1">
               {outreachRecords.filter((o) => o.account_id === selectedAccountForHistory.id).length === 0 ? (
-                <div className="py-8 text-center text-xs text-zinc-500">
+                <div className="py-12 text-center text-xs text-zinc-500 font-mono">
                   No outreach records recorded for this account.
                 </div>
               ) : (
@@ -301,7 +312,7 @@ export default function AccountsPage() {
                       <div key={rec.id} className="py-3.5 flex items-center justify-between text-xs">
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-mono font-bold text-zinc-950">
+                            <span className="font-mono font-bold text-white">
                               {inf?.instagram_handle || '@unknown'}
                             </span>
                             {rec.is_repeat_same_account && (
@@ -310,14 +321,14 @@ export default function AccountsPage() {
                               </Badge>
                             )}
                           </div>
-                          <div className="text-[11px] text-zinc-500 mt-0.5">
-                            Logged by: {emp?.full_name || 'Historical Import'}
+                          <div className="text-[11px] text-zinc-400 mt-0.5">
+                            Logged by: <span className="text-zinc-300 font-medium">{emp?.full_name || 'Historical Import'}</span>
                             {rec.notes && ` — "${rec.notes}"`}
                           </div>
                         </div>
 
-                        <div className="text-right">
-                          <div className="font-mono text-zinc-700 font-medium">
+                        <div className="text-right flex flex-col items-end gap-1">
+                          <div className="font-mono text-zinc-300 font-medium">
                             {rec.outreach_date ? (
                               formatOutreachDate(rec.outreach_date)
                             ) : (
@@ -326,7 +337,7 @@ export default function AccountsPage() {
                               </Badge>
                             )}
                           </div>
-                          <Badge variant="info" size="xs" className="mt-1">
+                          <Badge variant="info" size="xs">
                             {rec.status}
                           </Badge>
                         </div>
@@ -348,7 +359,7 @@ export default function AccountsPage() {
       >
         <form onSubmit={handleCreateAccount} className="space-y-4">
           <div>
-            <label className="text-xs font-bold text-zinc-900 block mb-1">
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
               Internal Account Name (e.g. Sugarland, Alamo)
             </label>
             <input
@@ -357,12 +368,12 @@ export default function AccountsPage() {
               value={accountName}
               onChange={(e) => setAccountName(e.target.value)}
               placeholder="e.g. Sugarland"
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500]"
+              className="w-full bg-obsidian-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-tox-orange"
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold text-zinc-900 block mb-1">
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
               Instagram Username / Handle
             </label>
             <input
@@ -371,38 +382,38 @@ export default function AccountsPage() {
               value={instagramHandle}
               onChange={(e) => setInstagramHandle(e.target.value)}
               placeholder="thetoxsugarland"
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500] font-mono"
+              className="w-full bg-obsidian-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-tox-orange font-mono"
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold text-zinc-900 block mb-1">
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
               Location
             </label>
             <select
               value={locationId}
               onChange={(e) => setLocationId(e.target.value)}
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:border-[#ff5500]"
+              className="w-full bg-obsidian-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-tox-orange"
             >
               {locations.map((loc) => (
-                <option key={loc.id} value={loc.id}>
+                <option key={loc.id} value={loc.id} className="bg-obsidian-950 text-white">
                   {loc.name} ({loc.city}, {loc.state})
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
             <button
               type="button"
               onClick={() => setIsCreateOpen(false)}
-              className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-xs font-bold text-zinc-700 hover:bg-zinc-50 transition-colors"
+              className="px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] text-xs font-semibold text-zinc-300 hover:bg-white/[0.08] hover:text-white transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all"
+              className="px-5 py-2.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all cursor-pointer"
             >
               Save Account
             </button>

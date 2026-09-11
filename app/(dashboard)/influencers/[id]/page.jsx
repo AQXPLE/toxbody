@@ -109,8 +109,8 @@ export default function InfluencerDetailPage() {
   if (loading) {
     return (
       <div className="py-24 text-center space-y-3 max-w-5xl mx-auto">
-        <div className="h-8 w-8 rounded-full border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto" />
-        <p className="text-xs text-zinc-600 font-mono">Loading influencer dossier...</p>
+        <div className="h-8 w-8 rounded-full border-2 border-tox-orange border-t-transparent animate-spin mx-auto" />
+        <p className="text-xs text-zinc-400 font-mono">Loading influencer dossier...</p>
       </div>
     );
   }
@@ -118,10 +118,10 @@ export default function InfluencerDetailPage() {
   if (!influencer) {
     return (
       <div className="py-16 text-center space-y-4 max-w-5xl mx-auto">
-        <div className="text-zinc-700 text-sm font-bold">Influencer record not found.</div>
+        <div className="text-zinc-300 text-sm font-semibold">Influencer record not found.</div>
         <Link
           href="/influencers"
-          className="text-[#ff5500] hover:underline text-xs inline-flex items-center gap-1.5 font-bold"
+          className="text-tox-orange hover:underline text-xs inline-flex items-center gap-1.5 font-semibold"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Influencer Directory
         </Link>
@@ -145,7 +145,7 @@ export default function InfluencerDetailPage() {
       <div className="flex items-center justify-between">
         <Link
           href="/influencers"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-600 hover:text-zinc-950 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Influencer Directory
         </Link>
@@ -153,14 +153,14 @@ export default function InfluencerDetailPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopyHandle}
-            className="px-3 py-1.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 hover:text-white text-xs font-medium transition-all shadow-xs flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
           >
-            <Copy className="h-3.5 w-3.5 text-[#ff5500]" />
+            <Copy className="h-3.5 w-3.5 text-tox-orange" />
             <span>Copy Handle</span>
           </button>
           <button
             onClick={() => router.push(`/outreach`)}
-            className="px-4 py-1.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all flex items-center gap-1.5"
+            className="px-4 py-1.5 rounded-xl bg-tox-orange hover:bg-tox-orange-hover text-black text-xs font-semibold shadow-tox-orange transition-all flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tox-orange"
           >
             <Send className="h-3.5 w-3.5" />
             <span>Log Outreach</span>
@@ -169,13 +169,13 @@ export default function InfluencerDetailPage() {
       </div>
 
       {/* Main Profile Dossier Card */}
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-tox-lg space-y-6">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
         {/* Profile Header Banner */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-zinc-100 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-white/[0.08] pb-6">
           <div className="flex items-center gap-5">
             {/* Real Avatar with Story Ring */}
-            <div className="p-1 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0 shadow-sm">
-              <div className="p-0.5 bg-white rounded-full">
+            <div className="p-0.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0 shadow-sm">
+              <div className="p-0.5 bg-obsidian-950 rounded-full">
                 {liveProfile?.avatarUrl ? (
                   <img
                     src={imageErrorMap['detail-avatar'] || liveProfile.avatarUrl}
@@ -185,7 +185,7 @@ export default function InfluencerDetailPage() {
                     className="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover shadow-inner"
                   />
                 ) : (
-                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-tr from-[#ff5500] to-orange-400 text-white flex items-center justify-center font-black text-3xl shadow-md">
+                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-tr from-tox-orange to-orange-400 text-black flex items-center justify-center font-bold text-3xl shadow-md">
                     @
                   </div>
                 )}
@@ -194,33 +194,33 @@ export default function InfluencerDetailPage() {
 
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl font-black text-zinc-950 font-mono tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-bold text-white font-mono tracking-tight">
                   {influencer.instagram_handle}
                 </h1>
                 {isVerified && (
-                  <CheckCircle2 className="h-5 w-5 text-sky-500 fill-sky-500" title="Verified Creator on Meta" />
+                  <CheckCircle2 className="h-5 w-5 text-sky-400 fill-sky-400" title="Verified Creator on Meta" />
                 )}
                 {liveProfile?.isLive && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     Live Meta Data
                   </span>
                 )}
                 {loadingLive && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-50 border border-orange-200 text-[#ff5500] text-xs font-bold animate-pulse">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-tox-orange/10 border border-tox-orange/20 text-tox-orange text-xs font-semibold animate-pulse">
                     Connecting to Meta...
                   </span>
                 )}
               </div>
 
-              <div className="text-sm font-bold text-zinc-800">
+              <div className="text-sm font-semibold text-white">
                 {displayName}
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 font-medium pt-0.5">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-400 font-normal pt-0.5">
                 {influencer.city && (
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-3.5 w-3.5 text-[#ff5500]" />
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-zinc-500" />
                     <span>{influencer.city}, {influencer.state || 'USA'}</span>
                   </span>
                 )}
@@ -228,7 +228,7 @@ export default function InfluencerDetailPage() {
                   href={influencer.instagram_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[#ff5500] hover:underline font-bold"
+                  className="inline-flex items-center gap-1 text-tox-orange hover:underline font-medium"
                 >
                   <Globe className="h-3.5 w-3.5" />
                   <span>instagram.com/{influencer.instagram_handle.replace(/^@/, '')}</span>
@@ -242,7 +242,7 @@ export default function InfluencerDetailPage() {
             <button
               type="button"
               onClick={() => setShowMetaViewer(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 text-[#ff5500] text-xs font-bold transition-all shadow-xs"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-tox-orange/30 bg-tox-orange/10 hover:bg-tox-orange/20 text-tox-orange text-xs font-medium transition-all shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
             >
               <Instagram className="h-4 w-4" />
               <span>Launch In-App IG Profile</span>
@@ -252,51 +252,51 @@ export default function InfluencerDetailPage() {
 
         {/* Live Instagram Follower & Activity Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
-          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 text-center">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Followers</div>
-            <div className="text-xl sm:text-2xl font-black font-mono text-zinc-950 mt-1">
+          <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">Followers</div>
+            <div className="text-xl sm:text-2xl font-bold font-mono text-white mt-1 tabular-nums">
               {displayFollowers}
             </div>
           </div>
-          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 text-center">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Posts</div>
-            <div className="text-xl sm:text-2xl font-black font-mono text-zinc-950 mt-1">
+          <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">Posts</div>
+            <div className="text-xl sm:text-2xl font-bold font-mono text-white mt-1 tabular-nums">
               {liveProfile?.postCount || '—'}
             </div>
           </div>
-          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 text-center">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Following</div>
-            <div className="text-xl sm:text-2xl font-black font-mono text-zinc-950 mt-1">
+          <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">Following</div>
+            <div className="text-xl sm:text-2xl font-bold font-mono text-white mt-1 tabular-nums">
               {liveProfile?.followingCount || '—'}
             </div>
           </div>
-          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 text-center">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Total Touches</div>
-            <div className="text-xl sm:text-2xl font-black font-mono text-zinc-950 mt-1">
+          <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">Total Touches</div>
+            <div className="text-xl sm:text-2xl font-bold font-mono text-white mt-1 tabular-nums">
               {outreachHistory.length}
             </div>
           </div>
-          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 text-center">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Accounts Contacted</div>
-            <div className="text-xl sm:text-2xl font-black font-mono text-blue-600 mt-1">
+          <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">Accounts Contacted</div>
+            <div className="text-xl sm:text-2xl font-bold font-mono text-sky-400 mt-1 tabular-nums">
               {contactedAccountIds.size}
             </div>
           </div>
-          <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 text-center">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">Repeat Touches</div>
-            <div className="text-xl sm:text-2xl font-black font-mono text-[#ff5500] mt-1">
+          <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">Repeat Touches</div>
+            <div className="text-xl sm:text-2xl font-bold font-mono text-tox-orange mt-1 tabular-nums">
               {repeats.length}
             </div>
           </div>
         </div>
 
         {/* Bio Box */}
-        <div className="rounded-2xl border border-zinc-200 bg-zinc-50/50 p-5 space-y-2">
-          <div className="text-[11px] font-bold text-zinc-500 uppercase font-mono flex items-center justify-between">
+        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 space-y-2">
+          <div className="text-[11px] font-mono text-zinc-400 uppercase flex items-center justify-between">
             <span>Instagram Bio & Dossier Details</span>
-            {liveProfile?.isLive && <span className="text-emerald-600 font-bold text-[10px]">Verified from Meta</span>}
+            {liveProfile?.isLive && <span className="text-emerald-400 font-semibold text-[10px]">Verified from Meta</span>}
           </div>
-          <p className="text-xs sm:text-sm text-zinc-800 whitespace-pre-line leading-relaxed font-sans">
+          <p className="text-xs sm:text-sm text-zinc-300 whitespace-pre-line leading-relaxed font-sans">
             {displayBio}
           </p>
         </div>
@@ -304,13 +304,13 @@ export default function InfluencerDetailPage() {
         {/* Real Recent Posts Gallery */}
         <div className="space-y-3 pt-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-black uppercase tracking-wider text-zinc-950 flex items-center gap-2">
-              <Layers className="h-4 w-4 text-[#ff5500]" />
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-white flex items-center gap-2">
+              <Layers className="h-4 w-4 text-tox-orange" />
               <span>Recent Feed Photos ({liveProfile?.posts ? liveProfile.posts.length : 'Live Meta Gallery'})</span>
             </h3>
             <button
               onClick={() => setShowMetaViewer(true)}
-              className="text-xs text-[#ff5500] hover:text-[#e04a00] font-bold hover:underline"
+              className="text-xs text-tox-orange hover:text-tox-orange-hover font-semibold transition-colors focus-visible:outline-none focus-visible:underline"
             >
               Open Full In-App Viewer ↗
             </button>
@@ -324,7 +324,7 @@ export default function InfluencerDetailPage() {
                   href={post.url || influencer.instagram_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative group aspect-square rounded-2xl overflow-hidden bg-zinc-100 border border-zinc-200 block shadow-2xs cursor-pointer"
+                  className="relative group aspect-square rounded-2xl overflow-hidden bg-obsidian-900 border border-white/10 block shadow-xs cursor-pointer"
                 >
                   <img
                     src={imageErrorMap[`detail-post-${idx}`] || post.imageUrl}
@@ -333,27 +333,27 @@ export default function InfluencerDetailPage() {
                     alt="Instagram Post"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-white font-bold text-xs p-1 text-center font-mono">
+                  <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-white font-medium text-xs p-1 text-center font-mono">
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-0.5">
-                        <Heart className="h-3.5 w-3.5 fill-white" />
-                        <span>{post.likes}</span>
+                      <div className="flex items-center gap-1">
+                        <Heart className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />
+                        <span className="tabular-nums">{post.likes}</span>
                       </div>
                     </div>
-                    <span className="text-[9px] text-zinc-300 underline">View ↗</span>
+                    <span className="text-[9px] text-tox-orange underline">View ↗</span>
                   </div>
                 </a>
               ))}
             </div>
           ) : (
-            <div className="py-8 text-center rounded-2xl border border-zinc-200 bg-zinc-50/50 space-y-2">
-              <Instagram className="h-8 w-8 text-zinc-300 mx-auto" />
-              <p className="text-xs text-zinc-600 font-medium">
+            <div className="py-8 text-center rounded-2xl border border-white/[0.08] bg-white/[0.02] space-y-2">
+              <Instagram className="h-8 w-8 text-zinc-600 mx-auto" />
+              <p className="text-xs text-zinc-400 font-normal">
                 Photo posts can be previewed directly via Meta in-app profile.
               </p>
               <button
                 onClick={() => setShowMetaViewer(true)}
-                className="px-4 py-1.5 rounded-xl bg-zinc-950 text-white text-xs font-bold hover:bg-black transition-colors"
+                className="px-4 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white text-xs font-semibold border border-white/10 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
               >
                 Launch In-App Meta Feed
               </button>
@@ -363,10 +363,10 @@ export default function InfluencerDetailPage() {
       </div>
 
       {/* Chronological Outreach Timeline */}
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 space-y-5 shadow-tox-lg">
-        <h2 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center justify-between border-b border-zinc-100 pb-4">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-white flex items-center justify-between border-b border-white/[0.08] pb-4">
           <span className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-[#ff5500]" />
+            <Calendar className="h-4 w-4 text-tox-orange" />
             <span>Chronological Outreach Timeline</span>
           </span>
           <Badge variant="primary" size="xs">
@@ -375,7 +375,7 @@ export default function InfluencerDetailPage() {
         </h2>
 
         {outreachHistory.length === 0 ? (
-          <div className="py-12 text-center text-xs text-zinc-500 rounded-2xl border border-zinc-200 bg-zinc-50">
+          <div className="py-12 text-center text-xs text-zinc-400 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
             No outreach recorded for this influencer yet.
           </div>
         ) : (
@@ -387,11 +387,11 @@ export default function InfluencerDetailPage() {
               return (
                 <div
                   key={item.id}
-                  className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 space-y-2 hover:border-zinc-300 transition-colors"
+                  className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] space-y-2 hover:border-white/[0.15] transition-colors"
                 >
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-zinc-950">
+                      <span className="font-semibold text-white">
                         Account: {acc?.account_name || 'Marketing Account'}
                       </span>
                       {item.is_repeat_same_account ? (
@@ -418,12 +418,12 @@ export default function InfluencerDetailPage() {
                     </Badge>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-zinc-500">
+                  <div className="flex items-center justify-between text-[11px] text-zinc-400">
                     <div>
                       <span>Staff: </span>
-                      <strong className="text-zinc-800">{emp?.full_name || 'Historical Import'}</strong>
+                      <strong className="text-zinc-200">{emp?.full_name || 'Historical Import'}</strong>
                     </div>
-                    <div className="font-mono font-medium text-zinc-600">
+                    <div className="font-mono text-zinc-400 tabular-nums">
                       {item.outreach_date ? (
                         formatOutreachDate(item.outreach_date)
                       ) : (
@@ -435,7 +435,7 @@ export default function InfluencerDetailPage() {
                   </div>
 
                   {item.notes && (
-                    <div className="text-xs text-zinc-700 bg-white p-3 rounded-xl border border-zinc-200 mt-1.5">
+                    <div className="text-xs text-zinc-300 bg-obsidian-950/80 p-3 rounded-xl border border-white/[0.06] mt-1.5 font-sans">
                       {item.notes}
                     </div>
                   )}

@@ -86,32 +86,32 @@ export function CommandPalette({ isOpen, onClose }) {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 sm:p-6">
+      <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 sm:p-6 animate-in fade-in duration-150">
         {/* Backdrop */}
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs" onClick={onClose} />
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
 
         {/* Palette Modal */}
-        <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-2xl transition-all">
+        <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/[0.12] bg-zinc-950 shadow-8k-modal transition-all z-10">
           {/* Search Input Bar */}
-          <div className="flex items-center gap-3 border-b border-zinc-100 px-5 py-4 bg-zinc-50/50">
-            <Search className="h-5 w-5 text-[#ff5500] shrink-0" />
+          <div className="flex items-center gap-3 border-b border-white/[0.08] px-5 py-4 bg-black/60">
+            <Search className="h-4 w-4 text-[#ff5500] shrink-0" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search any creator, @handle, account, or location..."
               autoFocus
-              className="flex-1 bg-transparent text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none font-mono"
+              className="flex-1 bg-transparent text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-mono"
             />
             {query && (
               <button
                 onClick={() => setQuery('')}
-                className="rounded-lg p-1 text-zinc-400 hover:text-zinc-700"
+                className="rounded-lg p-1 text-zinc-400 hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
-            <kbd className="rounded-lg border border-zinc-200 bg-white px-2 py-0.5 text-[10px] font-mono font-bold text-zinc-500 shadow-2xs">
+            <kbd className="rounded-md border border-white/[0.1] bg-white/[0.05] px-2 py-0.5 text-[10px] font-mono font-bold text-zinc-400">
               ESC
             </kbd>
           </div>
@@ -123,19 +123,19 @@ export function CommandPalette({ isOpen, onClose }) {
               <div className="p-1">
                 <button
                   onClick={() => handleOpenMetaProfile(`@${cleanQuery}`)}
-                  className="w-full flex items-center justify-between rounded-2xl p-3.5 border border-orange-200 bg-orange-50 hover:bg-orange-100/70 transition-all text-left group"
+                  className="w-full flex items-center justify-between rounded-xl p-3.5 border border-[#ff5500]/30 bg-[#ff5500]/10 hover:bg-[#ff5500]/20 transition-all text-left group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-[#ff5500] text-white flex items-center justify-center shadow-xs">
+                    <div className="h-9 w-9 rounded-xl bg-[#ff5500] text-white flex items-center justify-center shadow-tox-orange">
                       <Instagram className="h-5 w-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-black text-zinc-950 font-mono flex items-center gap-1.5">
+                      <div className="text-xs font-black text-white font-mono flex items-center gap-1.5">
                         <span>Inspect Meta / Instagram Profile for</span>
                         <span className="text-[#ff5500]">@{cleanQuery}</span>
                       </div>
-                      <div className="text-[11px] text-zinc-600">
-                        Launch in-app Instagram viewer with followers, posts & outreach dossier
+                      <div className="text-[11px] text-zinc-400">
+                        Launch in-app Instagram viewer with live followers, posts & outreach dossier
                       </div>
                     </div>
                   </div>
@@ -147,7 +147,7 @@ export function CommandPalette({ isOpen, onClose }) {
             {/* Influencers Section */}
             {filteredInfluencers.length > 0 && (
               <div>
-                <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 font-mono">
                   Registered Influencers
                 </div>
                 <div className="space-y-1">
@@ -155,24 +155,24 @@ export function CommandPalette({ isOpen, onClose }) {
                     <button
                       key={inf.id}
                       onClick={() => handleOpenMetaProfile(inf.instagram_handle)}
-                      className="w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-left hover:bg-zinc-50 transition-colors group"
+                      className="w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-left hover:bg-white/[0.05] transition-colors group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-orange-100 text-[#ff5500] font-bold flex items-center justify-center text-xs font-mono">
+                        <div className="h-7 w-7 rounded-lg bg-[#ff5500]/15 border border-[#ff5500]/30 text-[#ff5500] font-bold flex items-center justify-center text-xs font-mono">
                           @
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-zinc-900 group-hover:text-[#ff5500] font-mono">
+                          <div className="text-xs font-bold text-zinc-200 group-hover:text-[#ff5500] font-mono">
                             {inf.instagram_handle}
                           </div>
-                          <div className="text-[11px] text-zinc-500">{inf.display_name}</div>
+                          <div className="text-[11px] text-zinc-400">{inf.display_name}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         {inf.city && (
                           <span className="text-[11px] text-zinc-500">{inf.city}, {inf.state}</span>
                         )}
-                        <ArrowRight className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-800 transition-colors" />
+                        <ArrowRight className="h-3.5 w-3.5 text-zinc-600 group-hover:text-zinc-300 transition-colors" />
                       </div>
                     </button>
                   ))}
@@ -183,7 +183,7 @@ export function CommandPalette({ isOpen, onClose }) {
             {/* Accounts Section */}
             {filteredAccounts.length > 0 && (
               <div>
-                <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 font-mono">
                   Marketing Accounts
                 </div>
                 <div className="space-y-1">
@@ -191,14 +191,14 @@ export function CommandPalette({ isOpen, onClose }) {
                     <button
                       key={acc.id}
                       onClick={() => handleSelect(`/accounts`)}
-                      className="w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-left hover:bg-zinc-50 transition-colors group"
+                      className="w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-left hover:bg-white/[0.05] transition-colors group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#ff5500]">
-                          <Instagram className="h-4 w-4" />
+                        <div className="h-7 w-7 rounded-lg bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-[#ff5500]">
+                          <Instagram className="h-3.5 w-3.5" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-zinc-900 group-hover:text-[#ff5500]">
+                          <div className="text-xs font-bold text-zinc-200 group-hover:text-[#ff5500]">
                             {acc.account_name}
                           </div>
                           <div className="text-[11px] text-zinc-500 font-mono">
@@ -206,7 +206,7 @@ export function CommandPalette({ isOpen, onClose }) {
                           </div>
                         </div>
                       </div>
-                      <ArrowRight className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-800 transition-colors" />
+                      <ArrowRight className="h-3.5 w-3.5 text-zinc-600 group-hover:text-zinc-300 transition-colors" />
                     </button>
                   ))}
                 </div>
@@ -216,7 +216,7 @@ export function CommandPalette({ isOpen, onClose }) {
             {/* Locations Section */}
             {filteredLocations.length > 0 && (
               <div>
-                <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 font-mono">
                   Locations
                 </div>
                 <div className="space-y-1">
@@ -224,18 +224,18 @@ export function CommandPalette({ isOpen, onClose }) {
                     <button
                       key={loc.id}
                       onClick={() => handleSelect(`/locations`)}
-                      className="w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-left hover:bg-zinc-50 transition-colors group"
+                      className="w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-left hover:bg-white/[0.05] transition-colors group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-600">
-                          <MapPin className="h-4 w-4" />
+                        <div className="h-7 w-7 rounded-lg bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-zinc-400">
+                          <MapPin className="h-3.5 w-3.5" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-zinc-900">{loc.name}</div>
+                          <div className="text-xs font-bold text-zinc-200">{loc.name}</div>
                           <div className="text-[11px] text-zinc-500">{loc.city}, {loc.state}</div>
                         </div>
                       </div>
-                      <ArrowRight className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-800 transition-colors" />
+                      <ArrowRight className="h-3.5 w-3.5 text-zinc-600 group-hover:text-zinc-300 transition-colors" />
                     </button>
                   ))}
                 </div>

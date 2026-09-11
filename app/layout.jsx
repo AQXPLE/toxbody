@@ -9,7 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-[#0d0e12] text-zinc-100 antialiased selection:bg-amber-500/30 selection:text-amber-200">
+      <body className="min-h-screen bg-black text-[#ededed] antialiased selection:bg-[#ff5500]/30 selection:text-white">
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

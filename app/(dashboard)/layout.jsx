@@ -25,19 +25,20 @@ export default function DashboardLayout({ children }) {
 
   if (!mounted) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-[#f8fafc] text-zinc-500 font-mono text-xs">
-        Loading The Tox Technique Outreach Platform...
+      <div className="flex h-screen w-screen items-center justify-center bg-black text-zinc-500 font-mono text-xs">
+        <div className="h-5 w-5 rounded-full border-2 border-[#ff5500] border-t-transparent animate-spin mr-2" />
+        Initializing The Tox Technique Platform...
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#f8fafc]">
+    <div className="flex h-screen w-screen overflow-hidden bg-black text-[#ededed] bg-dot-grid">
       {/* Navigation Sidebar */}
       <Sidebar currentUser={currentUser} onUserChange={handleUserChange} />
 
       {/* Main Content Pane */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         <Topbar onOpenSearch={() => setIsSearchOpen(true)} currentUser={currentUser} />
         <main className="flex-1 overflow-y-auto p-6 md:p-8 space-y-8 max-w-7xl w-full mx-auto">
           {children}

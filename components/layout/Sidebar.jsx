@@ -110,28 +110,31 @@ export function Sidebar({ currentUser, onUserChange }) {
   const visibleNavItems = navItems.filter((item) => item.roles.includes(role));
 
   return (
-    <aside className="w-64 shrink-0 border-r border-zinc-200 bg-white flex flex-col h-screen select-none shadow-xs">
+    <aside className="w-64 shrink-0 border-r border-white/[0.08] bg-black/95 backdrop-blur-xl flex flex-col h-screen select-none relative z-20">
       {/* Brand Header */}
-      <div className="h-16 border-b border-zinc-200 flex items-center px-5 gap-3 bg-white">
-        <div className="h-9 w-9 rounded-xl bg-[#ff5500] flex items-center justify-center text-white font-bold shadow-tox-orange">
+      <div className="h-16 border-b border-white/[0.08] flex items-center px-5 gap-3 bg-black">
+        <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-[#ff5500] to-orange-600 flex items-center justify-center text-white font-bold shadow-tox-orange">
           <Sparkles className="h-4 w-4" />
         </div>
         <div>
-          <div className="text-xs font-black tracking-wider uppercase text-zinc-950 font-mono">
-            The Tox Technique
+          <div className="text-xs font-black tracking-wider uppercase text-white font-mono flex items-center gap-1.5">
+            <span>The Tox</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-white/[0.08] text-[#ff5500] border border-[#ff5500]/25">
+              8K
+            </span>
           </div>
-          <div className="text-[11px] text-[#ff5500] font-bold">Outreach Operations</div>
+          <div className="text-[11px] text-zinc-400 font-medium">Outreach Operations</div>
         </div>
       </div>
 
       {/* Role Badge Indicator */}
-      <div className="px-5 py-2.5 border-b border-zinc-100 bg-slate-50/70">
+      <div className="px-5 py-2.5 border-b border-white/[0.05] bg-zinc-950/60">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-zinc-500 text-[11px] font-medium">Logged Role:</span>
+          <span className="text-zinc-500 text-[11px] font-mono uppercase tracking-wider">Active Role</span>
           <Badge
-            variant={role === 'admin' ? 'black' : role === 'manager' ? 'warning' : 'primary'}
+            variant={role === 'admin' ? 'orange' : role === 'manager' ? 'warning' : 'primary'}
             size="xs"
-            className="uppercase font-mono tracking-wider"
+            className="uppercase font-mono tracking-wider text-[10px]"
           >
             {role}
           </Badge>
@@ -149,17 +152,17 @@ export function Sidebar({ currentUser, onUserChange }) {
               key={item.name}
               href={item.href}
               className={cn(
-                'group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all',
+                'group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all relative',
                 isActive
-                  ? 'bg-zinc-950 text-white shadow-sm'
-                  : 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100/70'
+                  ? 'bg-white/[0.09] text-white border border-white/[0.12] shadow-sm'
+                  : 'text-zinc-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
               )}
             >
               <div className="flex items-center gap-3">
                 <Icon
                   className={cn(
                     'h-4 w-4 transition-colors',
-                    isActive ? 'text-[#ff5500]' : 'text-zinc-400 group-hover:text-zinc-800'
+                    isActive ? 'text-[#ff5500]' : 'text-zinc-500 group-hover:text-zinc-300'
                   )}
                 />
                 <span>{item.name}</span>
@@ -172,7 +175,7 @@ export function Sidebar({ currentUser, onUserChange }) {
                   {item.badge}
                 </Badge>
               ) : (
-                isActive && <ChevronRight className="h-3.5 w-3.5 text-zinc-400" />
+                isActive && <ChevronRight className="h-3.5 w-3.5 text-[#ff5500]" />
               )}
             </Link>
           );
@@ -180,15 +183,15 @@ export function Sidebar({ currentUser, onUserChange }) {
       </nav>
 
       {/* User Switcher / Testing Footer */}
-      <div className="p-3 border-t border-zinc-200 bg-slate-50/70">
-        <div className="rounded-xl border border-zinc-200 bg-white p-3 shadow-2xs">
+      <div className="p-3 border-t border-white/[0.08] bg-zinc-950/80">
+        <div className="rounded-xl border border-white/[0.08] bg-zinc-900/60 p-3 shadow-inner">
           <div className="text-[10px] text-zinc-500 uppercase font-mono font-bold tracking-wider mb-1.5 flex items-center justify-between">
-            <span>Simulate Role:</span>
+            <span>Simulate Operator:</span>
           </div>
           <select
             value={currentUser?.id || ''}
             onChange={(e) => onUserChange && onUserChange(e.target.value)}
-            className="w-full text-xs bg-slate-50 text-zinc-900 font-semibold border border-zinc-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#ff5500]"
+            className="w-full text-xs bg-black text-zinc-200 font-semibold border border-white/[0.1] rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#ff5500]"
           >
             <option value="emp-daniyal">Daniyal (Admin)</option>
             <option value="emp-ahmed">Ahmed (Manager)</option>

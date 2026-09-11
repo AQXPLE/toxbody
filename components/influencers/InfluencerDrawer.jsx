@@ -75,15 +75,15 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
     <>
       <div className="fixed inset-0 z-50 flex justify-end">
         {/* Backdrop */}
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs" onClick={onClose} />
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
 
         {/* Slide-over Pane */}
-        <div className="relative w-full max-w-2xl bg-white border-l border-zinc-200 shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right-10 duration-200">
+        <div className="relative w-full max-w-2xl bg-obsidian-950 border-l border-white/10 shadow-2xl shadow-black h-full flex flex-col z-10 animate-in slide-in-from-right-10 duration-200 text-zinc-200">
           {/* Header */}
-          <div className="p-6 border-b border-zinc-100 flex items-start justify-between bg-zinc-50/50">
+          <div className="p-6 border-b border-white/[0.08] flex items-start justify-between bg-white/[0.02]">
             <div className="flex items-center gap-4">
-              <div className="p-1 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0">
-                <div className="p-0.5 bg-white rounded-full">
+              <div className="p-0.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shrink-0">
+                <div className="p-0.5 bg-obsidian-950 rounded-full">
                   {liveProfile?.avatarUrl ? (
                     <img
                       src={imageErrorMap['drawer-avatar'] || liveProfile.avatarUrl}
@@ -93,7 +93,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
                       className="h-14 w-14 rounded-full object-cover shadow-inner"
                     />
                   ) : (
-                    <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-[#ff5500] to-orange-400 text-white flex items-center justify-center font-black text-xl shadow-md">
+                    <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-tox-orange to-orange-400 text-black flex items-center justify-center font-bold text-xl shadow-md">
                       @
                     </div>
                   )}
@@ -102,25 +102,25 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
 
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-black text-zinc-950 font-mono">
+                  <h2 className="text-lg font-bold text-white font-mono tracking-tight">
                     {influencer.instagram_handle}
                   </h2>
                   {isVerified && (
-                    <CheckCircle2 className="h-4 w-4 text-sky-500 fill-sky-500" title="Verified on Meta" />
+                    <CheckCircle2 className="h-4 w-4 text-sky-400 fill-sky-400" title="Verified on Meta" />
                   )}
                   {liveProfile?.isLive && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                       Live Meta
                     </span>
                   )}
                   {loadingLive && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-50 border border-orange-200 text-[#ff5500] text-[10px] font-bold animate-pulse">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tox-orange/10 border border-tox-orange/20 text-tox-orange text-[10px] font-semibold animate-pulse">
                       Syncing...
                     </span>
                   )}
                 </div>
-                <div className="text-xs text-zinc-600 mt-0.5 font-bold">
+                <div className="text-xs text-zinc-400 mt-0.5 font-medium">
                   {displayName}
                 </div>
               </div>
@@ -129,7 +129,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
             <div className="flex items-center gap-2">
               <Link
                 href={`/influencers/${influencer.id}`}
-                className="px-2.5 py-1.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5"
+                className="px-2.5 py-1.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 hover:text-white text-xs font-medium transition-all shadow-xs flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
                 title="Open full influencer dossier"
               >
                 <span>Dossier</span>
@@ -139,15 +139,16 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
                 href={influencer.instagram_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-2.5 py-1.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5"
+                className="px-2.5 py-1.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 hover:text-white text-xs font-medium transition-all shadow-xs flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
                 title="Open live on Instagram"
               >
-                <Instagram className="h-3.5 w-3.5 text-[#ff5500]" />
+                <Instagram className="h-3.5 w-3.5 text-tox-orange" />
                 <span>Instagram</span>
               </a>
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
+                aria-label="Close drawer"
+                className="p-2 rounded-xl text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tox-orange"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -157,16 +158,16 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
           {/* Scrollable Content */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* Real Instagram Profile Dossier */}
-            <div className="rounded-3xl border border-zinc-200 bg-zinc-50/70 p-5 space-y-4 shadow-sm">
+            <div className="rounded-3xl border border-white/[0.08] bg-obsidian-900/60 p-5 space-y-4 backdrop-blur-md shadow-lg">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-wider text-zinc-950 flex items-center gap-1.5">
-                  <Instagram className="h-3.5 w-3.5 text-[#ff5500]" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-white flex items-center gap-1.5">
+                  <Instagram className="h-3.5 w-3.5 text-tox-orange" />
                   <span>Live Instagram Profile</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowMetaViewer(true)}
-                  className="text-xs text-[#ff5500] hover:text-[#e04a00] font-bold hover:underline"
+                  className="text-xs text-tox-orange hover:text-tox-orange-hover font-semibold transition-colors focus-visible:outline-none focus-visible:underline"
                 >
                   Expand Full Meta Viewer ↗
                 </button>
@@ -174,30 +175,30 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
 
               {/* Follower Stats Grid */}
               <div className="grid grid-cols-3 gap-2.5 text-center">
-                <div className="p-3 rounded-2xl bg-white border border-zinc-200 shadow-2xs">
-                  <span className="text-[10px] text-zinc-500 uppercase font-bold block">Followers</span>
-                  <span className="font-black font-mono text-zinc-950 text-base">{displayFollowers}</span>
+                <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] shadow-xs">
+                  <span className="text-[10px] text-zinc-400 uppercase font-mono font-medium block">Followers</span>
+                  <span className="font-bold font-mono text-white text-base tabular-nums">{displayFollowers}</span>
                 </div>
-                <div className="p-3 rounded-2xl bg-white border border-zinc-200 shadow-2xs">
-                  <span className="text-[10px] text-zinc-500 uppercase font-bold block">Posts</span>
-                  <span className="font-black font-mono text-zinc-950 text-base">{liveProfile?.postCount || '—'}</span>
+                <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] shadow-xs">
+                  <span className="text-[10px] text-zinc-400 uppercase font-mono font-medium block">Posts</span>
+                  <span className="font-bold font-mono text-white text-base tabular-nums">{liveProfile?.postCount || '—'}</span>
                 </div>
-                <div className="p-3 rounded-2xl bg-white border border-zinc-200 shadow-2xs">
-                  <span className="text-[10px] text-zinc-500 uppercase font-bold block">Following</span>
-                  <span className="font-black font-mono text-zinc-950 text-base">{liveProfile?.followingCount || '—'}</span>
+                <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] shadow-xs">
+                  <span className="text-[10px] text-zinc-400 uppercase font-mono font-medium block">Following</span>
+                  <span className="font-bold font-mono text-white text-base tabular-nums">{liveProfile?.followingCount || '—'}</span>
                 </div>
               </div>
 
               {/* Bio & Details */}
-              <div className="bg-white p-3.5 rounded-2xl border border-zinc-200 space-y-1.5 shadow-2xs">
-                <div className="text-[11px] font-bold text-zinc-500 uppercase font-mono">Instagram Bio</div>
-                <p className="text-xs text-zinc-800 whitespace-pre-line leading-relaxed">
+              <div className="bg-white/[0.03] p-3.5 rounded-2xl border border-white/[0.06] space-y-1.5 shadow-xs">
+                <div className="text-[11px] font-mono font-medium text-zinc-400 uppercase">Instagram Bio</div>
+                <p className="text-xs text-zinc-300 whitespace-pre-line leading-relaxed">
                   {displayBio}
                 </p>
                 {influencer.city && (
-                  <div className="text-[11px] text-zinc-500 pt-1 flex items-center gap-1">
-                    <MapPin className="h-3 w-3 text-zinc-400" />
-                    <span>Location: <strong>{influencer.city}, {influencer.state || 'USA'}</strong></span>
+                  <div className="text-[11px] text-zinc-400 pt-1 flex items-center gap-1.5">
+                    <MapPin className="h-3 w-3 text-zinc-500" />
+                    <span>Location: <strong className="text-zinc-200">{influencer.city}, {influencer.state || 'USA'}</strong></span>
                   </div>
                 )}
               </div>
@@ -205,7 +206,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
               {/* Live Post Thumbnails if available */}
               {liveProfile?.posts && liveProfile.posts.length > 0 && (
                 <div className="space-y-2">
-                  <div className="text-[11px] font-bold text-zinc-500 uppercase font-mono">Recent Feed Photos</div>
+                  <div className="text-[11px] font-mono font-medium text-zinc-400 uppercase">Recent Feed Photos</div>
                   <div className="grid grid-cols-3 gap-2">
                     {liveProfile.posts.slice(0, 6).map((post, idx) => (
                       <a
@@ -213,7 +214,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
                         href={post.url || influencer.instagram_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="relative group aspect-square rounded-xl overflow-hidden bg-zinc-200 border border-zinc-200 block shadow-2xs"
+                        className="relative group aspect-square rounded-xl overflow-hidden bg-obsidian-900 border border-white/10 block shadow-xs"
                       >
                         <img
                           src={imageErrorMap[`drawer-post-${idx}`] || post.imageUrl}
@@ -222,7 +223,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
                           alt="Post"
                           className="w-full h-full object-cover transition-transform group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-bold">
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-medium">
                           View Post ↗
                         </div>
                       </a>
@@ -234,29 +235,29 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
 
             {/* Quick Metrics Grid */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/50">
-                <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">
+              <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">
                   Total Outreach
                 </div>
-                <div className="text-2xl font-black font-mono text-zinc-950 mt-1">
+                <div className="text-2xl font-bold font-mono text-white mt-1 tabular-nums">
                   {outreachHistory.length}
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/50">
-                <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">
+              <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">
                   Accounts Reached
                 </div>
-                <div className="text-2xl font-black font-mono text-blue-600 mt-1">
+                <div className="text-2xl font-bold font-mono text-sky-400 mt-1 tabular-nums">
                   {contactedAccountIds.size}
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/50">
-                <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">
+              <div className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">
                   Repeat Outreach
                 </div>
-                <div className="text-2xl font-black font-mono text-[#ff5500] mt-1">
+                <div className="text-2xl font-bold font-mono text-tox-orange mt-1 tabular-nums">
                   {repeatOutreaches.length}
                 </div>
               </div>
@@ -264,7 +265,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
 
             {/* Chronological Outreach Timeline */}
             <div className="space-y-3">
-              <h4 className="text-xs font-black uppercase tracking-wider text-zinc-950 flex items-center justify-between">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-white flex items-center justify-between">
                 <span>Chronological Outreach Touchpoints</span>
                 <Badge variant="primary" size="xs">
                   {outreachHistory.length} Events
@@ -272,7 +273,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
               </h4>
 
               {outreachHistory.length === 0 ? (
-                <div className="py-8 text-center text-zinc-500 text-xs rounded-2xl border border-zinc-200 bg-zinc-50">
+                <div className="py-8 text-center text-zinc-400 text-xs rounded-2xl border border-white/[0.08] bg-white/[0.02]">
                   No outreach has been logged for this influencer yet.
                 </div>
               ) : (
@@ -284,11 +285,11 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
                     return (
                       <div
                         key={event.id}
-                        className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 space-y-2 hover:border-zinc-300 transition-colors"
+                        className="p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] space-y-2 hover:border-white/[0.15] transition-colors"
                       >
                         <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-zinc-950">
+                            <span className="font-semibold text-white">
                               Account: {acc?.account_name || 'Marketing Account'}
                             </span>
                             {event.is_repeat_same_account ? (
@@ -316,12 +317,12 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
                           </Badge>
                         </div>
 
-                        <div className="flex items-center justify-between text-[11px] text-zinc-500">
+                        <div className="flex items-center justify-between text-[11px] text-zinc-400">
                           <div>
                             <span>Staff: </span>
-                            <strong className="text-zinc-700">{emp?.full_name || 'Historical / Unknown'}</strong>
+                            <strong className="text-zinc-200">{emp?.full_name || 'Historical / Unknown'}</strong>
                           </div>
-                          <div className="font-mono font-medium text-zinc-600">
+                          <div className="font-mono text-zinc-400 tabular-nums">
                             {event.outreach_date ? (
                               formatOutreachDate(event.outreach_date)
                             ) : (
@@ -333,7 +334,7 @@ export function InfluencerDrawer({ influencer, outreachHistory, accounts, employ
                         </div>
 
                         {event.notes && (
-                          <div className="text-xs text-zinc-700 bg-white p-3 rounded-xl border border-zinc-200 mt-1.5 font-sans">
+                          <div className="text-xs text-zinc-300 bg-obsidian-950/80 p-3 rounded-xl border border-white/[0.06] mt-1.5 font-sans">
                             {event.notes}
                           </div>
                         )}

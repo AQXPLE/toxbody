@@ -37,16 +37,16 @@ export default function DataQualityPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-orange-200 bg-orange-50 text-[#ff5500] text-[11px] font-bold mb-2">
-            <ShieldAlert className="h-3 w-3" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-tox-orange/30 bg-tox-orange/10 text-tox-orange text-xs font-mono font-medium mb-3 backdrop-blur-md">
+            <ShieldAlert className="h-3.5 w-3.5 text-tox-orange" />
             <span>Integrity Auditor</span>
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-zinc-950 flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5">
             Data Quality & Integrity Center
           </h1>
-          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
+          <p className="text-xs text-zinc-400 mt-1.5 max-w-xl leading-relaxed">
             Audit handle sanitation, unverified accounts, unassigned geographic locations, and migration anomalies.
           </p>
         </div>
@@ -60,63 +60,68 @@ export default function DataQualityPage() {
 
       {/* Audit Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-1 shadow-tox-lg">
-          <div className="text-[11px] uppercase font-bold text-zinc-500 flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 text-[#ff5500]" />
+        <div className="glass-panel rounded-3xl p-6 space-y-2 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+          <div className="text-[11px] uppercase font-mono font-medium text-tox-orange flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 text-tox-orange" />
             <span>Missing Locations</span>
           </div>
-          <div className="text-3xl font-black font-mono text-[#ff5500]">
+          <div className="text-3xl sm:text-4xl font-bold font-mono text-tox-orange tracking-tight">
             {missingLocations.length}
           </div>
-          <div className="text-[11px] text-zinc-500 font-medium">Profiles without geographic tagging</div>
+          <div className="text-xs text-zinc-500 font-mono">Profiles without geographic tagging</div>
         </div>
 
-        <div className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-1 shadow-tox-lg">
-          <div className="text-[11px] uppercase font-bold text-zinc-500 flex items-center gap-1.5">
-            <ShieldAlert className="h-3.5 w-3.5 text-blue-600" />
+        <div className="glass-panel rounded-3xl p-6 space-y-2 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+          <div className="text-[11px] uppercase font-mono font-medium text-blue-400 flex items-center gap-1.5">
+            <ShieldAlert className="h-3.5 w-3.5 text-blue-400" />
             <span>Standard Profile Status</span>
           </div>
-          <div className="text-3xl font-black font-mono text-blue-600">
+          <div className="text-3xl sm:text-4xl font-bold font-mono text-blue-400 tracking-tight">
             {unverifiedProfiles.length}
           </div>
-          <div className="text-[11px] text-zinc-500 font-medium">Standard Instagram accounts</div>
+          <div className="text-xs text-zinc-500 font-mono">Standard Instagram accounts</div>
         </div>
 
-        <div className="p-6 rounded-3xl border border-zinc-200 bg-white space-y-1 shadow-tox-lg">
-          <div className="text-[11px] uppercase font-bold text-zinc-500 flex items-center gap-1.5">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+        <div className="glass-panel rounded-3xl p-6 space-y-2 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+          <div className="text-[11px] uppercase font-mono font-medium text-emerald-400 flex items-center gap-1.5">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
             <span>Malformed Handles</span>
           </div>
-          <div className="text-3xl font-black font-mono text-emerald-600">
+          <div className="text-3xl sm:text-4xl font-bold font-mono text-emerald-400 tracking-tight">
             {malformedCandidates.length}
           </div>
-          <div className="text-[11px] text-zinc-500 font-medium">Normalizer sanitized 100% of handles</div>
+          <div className="text-xs text-zinc-500 font-mono">Normalizer sanitized 100% of handles</div>
         </div>
       </div>
 
       {/* Profiles Missing Location */}
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-tox-lg space-y-4">
-        <h3 className="text-sm font-black uppercase tracking-wider text-zinc-950 flex items-center justify-between border-b border-zinc-100 pb-3">
-          <span>Profiles Needing Geographic Tagging ({missingLocations.length})</span>
-          <span className="text-xs font-normal text-zinc-500">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4">
+        <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
+          <h3 className="text-xs font-mono uppercase tracking-wider text-white font-semibold">
+            Profiles Needing Geographic Tagging ({missingLocations.length})
+          </h3>
+          <span className="text-xs font-normal text-zinc-500 font-mono hidden sm:inline">
             Location assignment enables account-level prospecting
           </span>
-        </h3>
+        </div>
 
-        <div className="max-h-72 overflow-y-auto divide-y divide-zinc-100 rounded-2xl border border-zinc-200 bg-zinc-50/50">
+        <div className="max-h-72 overflow-y-auto divide-y divide-white/[0.04] rounded-2xl border border-white/[0.08] bg-obsidian-900/60 pr-1">
           {missingLocations.length === 0 ? (
-            <div className="py-8 text-center text-xs text-zinc-500">
+            <div className="py-12 text-center text-xs text-zinc-500 font-mono">
               All influencer profiles have assigned locations.
             </div>
           ) : (
             missingLocations.slice(0, 20).map((inf) => (
               <div
                 key={inf.id}
-                className="p-3.5 flex items-center justify-between text-xs hover:bg-white transition-colors"
+                className="p-3.5 flex items-center justify-between text-xs hover:bg-white/[0.02] transition-colors"
               >
                 <div>
-                  <span className="font-mono font-bold text-zinc-950">{inf.instagram_handle}</span>
-                  <div className="text-[11px] text-zinc-500">{inf.display_name || 'No display name'}</div>
+                  <span className="font-mono font-bold text-white">{inf.instagram_handle}</span>
+                  <div className="text-[11px] text-zinc-400 font-mono mt-0.5">{inf.display_name || 'No display name'}</div>
                 </div>
                 <Badge variant="warning" size="xs">
                   Missing Location
