@@ -40,12 +40,33 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
   const [accounts, setAccounts] = useState([]);
   const [activeTab, setActiveTab] = useState('POSTS'); // POSTS, TOX_HISTORY
   const [imageErrorMap, setImageErrorMap] = useState({});
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [reviewTag, setReviewTag] = useState('');
 
   useEffect(() => {
     if (handle) {
       loadLiveProfile(handle);
     }
   }, [handle]);
+
+  const openPocketBrowser = () => {
+    if (!profileData) return;
+    const url = profileData.instagramUrl || `https://www.instagram.com/${handle}/`;
+    const width = 480;
+    const height = 840;
+    const left = typeof window !== 'undefined' && window.screen?.width ? Math.max(20, Math.floor((window.screen.width - width) / 2)) : 100;
+    const top = 50;
+    window.open(
+      url,
+      'ToxPocketBrowser',
+      `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes,status=no,toolbar=no`
+    );
+    addToast({
+      title: 'Pocket Browser Launched',
+      message: `Opened ${profileData.formattedHandle} in dedicated Instagram pocket companion window.`,
+      type: 'info',
+    });
+  };
 
   const loadLiveProfile = async (rawHandle) => {
     setLoading(true);
@@ -155,6 +176,15 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
 
           <div className="flex items-center gap-2">
             <button
+              onClick={openPocketBrowser}
+              className="px-2.5 py-1 rounded-lg border border-orange-200 bg-orange-50 hover:bg-orange-100 text-[#ff5500] text-xs font-bold flex items-center gap-1.5 transition-colors shadow-2xs"
+              title="Launch dedicated Pocket Browser mobile window to browse all posts and videos freely"
+            >
+              <Sparkles className="h-3 w-3 text-[#ff5500]" />
+              <span className="hidden sm:inline">Pocket Browser</span>
+              <span className="sm:hidden">Pocket</span>
+            </button>
+            <button
               onClick={handleCopyHandle}
               className="px-2.5 py-1 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-bold flex items-center gap-1.5 transition-colors"
             >
@@ -169,7 +199,7 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
               title="Open Official Instagram Page in New Tab"
             >
               <ExternalLink className="h-3.5 w-3.5 text-zinc-500" />
-              <span>Open on Instagram</span>
+              <span className="hidden sm:inline">Open on Instagram</span>
             </a>
             <button
               onClick={onClose}
@@ -375,11 +405,9 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
               {profileData.posts && profileData.posts.length > 0 ? (
                 <div className="grid grid-cols-3 gap-2 sm:gap-3">
                   {profileData.posts.map((post, idx) => (
-                    <a
+                    <div
                       key={post.id || idx}
-                      href={post.url || profileData.instagramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      onClick={() => setSelectedPost(post)}
                       className="relative group aspect-square rounded-2xl overflow-hidden bg-zinc-100 cursor-pointer border border-zinc-200 block shadow-xs"
                     >
                       <img
@@ -402,9 +430,9 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                             <span>{post.comments}</span>
                           </div>
                         </div>
-                        <span className="text-[10px] text-zinc-300 underline underline-offset-2">View on Instagram ↗</span>
+                        <span className="text-[10px] text-orange-400 font-bold">Review Post & Video ⚡</span>
                       </div>
-                    </a>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -414,23 +442,172 @@ export function InstagramProfileViewer({ handle, onClose, onLogOutreachDirect })
                     {profileData.displayName}'s Profile ({profileData.formattedHandle})
                   </div>
                   <p className="text-xs text-zinc-500 max-w-sm mx-auto">
-                    Open the live Instagram page to view all {profileData.postCount} photos, videos, and stories.
+                    Open the live Instagram page or launch the Pocket Browser to view all {profileData.postCount} photos, videos, and stories.
                   </p>
-                  <a
-                    href={profileData.instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-bold transition-all shadow-md"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    <span>Open Official Instagram Feed</span>
-                  </a>
+                  <div className="flex items-center justify-center gap-3 pt-2">
+                    <button
+                      onClick={openPocketBrowser}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold transition-all shadow-tox-orange"
+                    >
+                      <Sparkles className="h-3.5 w-3.5" />
+                      <span>Launch Pocket Browser</span>
+                    </button>
+                    <a
+                      href={profileData.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-bold transition-all shadow-md"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      <span>Open Official Feed</span>
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
           </div>
         )}
       </div>
+
+      {/* Interactive Post & Video Reviewer Modal */}
+      {selectedPost && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl border border-zinc-200 flex flex-col max-h-[90vh]">
+            {/* Modal Top Bar */}
+            <div className="px-5 py-3.5 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/70">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-6 rounded-lg bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white text-xs font-black">
+                  <Instagram className="h-3.5 w-3.5" />
+                </div>
+                <div>
+                  <span className="font-bold text-xs text-zinc-950 font-mono">
+                    {profileData.formattedHandle} Post Review
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedPost(null)}
+                className="p-1 rounded-lg text-zinc-400 hover:bg-zinc-200/60 hover:text-zinc-700 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Media Content View */}
+            <div className="relative aspect-square max-h-[50vh] bg-black flex items-center justify-center overflow-hidden">
+              <img
+                src={imageErrorMap[selectedPost.id] || selectedPost.imageUrl}
+                onError={() => handleImageError(selectedPost.id, selectedPost.imageUrl)}
+                referrerPolicy="no-referrer"
+                alt="Post inspection"
+                className="max-h-full max-w-full object-contain"
+              />
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded-xl bg-black/60 backdrop-blur-xs text-white text-xs font-mono font-bold">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1 text-rose-400">
+                    <Heart className="h-3.5 w-3.5 fill-rose-400" />
+                    {selectedPost.likes} Likes
+                  </span>
+                  <span className="flex items-center gap-1 text-zinc-300">
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    {selectedPost.comments} Comments
+                  </span>
+                </div>
+                <span className="text-[10px] text-zinc-300">Live Post Media</span>
+              </div>
+            </div>
+
+            {/* Evaluation & Action Bar */}
+            <div className="p-5 space-y-4 bg-white overflow-y-auto">
+              <div className="space-y-2">
+                <div className="text-[11px] uppercase font-bold text-zinc-500 font-mono flex items-center justify-between">
+                  <span>Outreach Fit Assessment</span>
+                  {reviewTag && (
+                    <Badge variant="orange" size="xs">
+                      {reviewTag}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      setReviewTag('Top Aesthetic Fit');
+                      addToast({ title: 'Tag Saved', message: 'Marked as Top Aesthetic Fit for Tox Body campaigns', type: 'success' });
+                    }}
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                      reviewTag === 'Top Aesthetic Fit'
+                        ? 'bg-orange-50 border-[#ff5500] text-[#ff5500]'
+                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100'
+                    }`}
+                  >
+                    🔥 Top Aesthetic Fit
+                  </button>
+                  <button
+                    onClick={() => {
+                      setReviewTag('High Engagement');
+                      addToast({ title: 'Tag Saved', message: 'Marked as High Engagement content', type: 'success' });
+                    }}
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                      reviewTag === 'High Engagement'
+                        ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
+                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100'
+                    }`}
+                  >
+                    📈 High Engagement
+                  </button>
+                  <button
+                    onClick={() => {
+                      setReviewTag('Keep On Radar');
+                      addToast({ title: 'Tag Saved', message: 'Marked to Keep on Radar', type: 'info' });
+                    }}
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                      reviewTag === 'Keep On Radar'
+                        ? 'bg-blue-50 border-blue-500 text-blue-700'
+                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100'
+                    }`}
+                  >
+                    👀 Keep on Radar
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center gap-2 pt-2 border-t border-zinc-100">
+                <button
+                  onClick={() => {
+                    handleAddToToxAndLog();
+                    setSelectedPost(null);
+                  }}
+                  className="w-full sm:flex-1 py-2.5 rounded-xl bg-[#ff5500] hover:bg-[#e04a00] text-white text-xs font-bold shadow-tox-orange transition-all flex items-center justify-center gap-2"
+                >
+                  <Send className="h-3.5 w-3.5" />
+                  <span>Log Outreach for This Creator</span>
+                </button>
+                <button
+                  onClick={() => {
+                    openPocketBrowser();
+                    setSelectedPost(null);
+                  }}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 text-[#ff5500] text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                  title="Open in Pocket Browser window to watch full video"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Pocket Window</span>
+                </button>
+                <a
+                  href={selectedPost.url || profileData.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  <span>Instagram</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
